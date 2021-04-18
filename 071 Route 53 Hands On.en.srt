@@ -1,0 +1,416 @@
+1
+00:00:00,150 --> 00:00:03,500
+So, let's go to the Route 53 console.
+
+2
+00:00:03,500 --> 00:00:05,700
+And, as we can see here, that's a scalable DNS.
+
+3
+00:00:05,700 --> 00:00:08,370
+So, Route 53 is a global service.
+
+4
+00:00:08,370 --> 00:00:10,470
+It does not require any region selection.
+
+5
+00:00:10,470 --> 00:00:12,460
+And then when you go to your hosted zones,
+
+6
+00:00:12,460 --> 00:00:14,410
+currently it shows a new AWS account for you.
+
+7
+00:00:14,410 --> 00:00:15,460
+You'll see nothing.
+
+8
+00:00:15,460 --> 00:00:16,770
+But for me, I already bought a purchase
+
+9
+00:00:16,770 --> 00:00:19,040
+and domain name and created a hosted zone from it.
+
+10
+00:00:19,040 --> 00:00:20,980
+So, we see stephanetheteacher.com.
+
+11
+00:00:20,980 --> 00:00:23,130
+So, let's go ahead, say we have nothing in it.
+
+12
+00:00:23,130 --> 00:00:25,300
+What you want to do is to purchase a domain.
+
+13
+00:00:25,300 --> 00:00:27,630
+So, for this, you go to Registered domains
+
+14
+00:00:27,630 --> 00:00:29,920
+and click on Register Domain.
+
+15
+00:00:29,920 --> 00:00:31,620
+And here you're able to choose a domain name,
+
+16
+00:00:31,620 --> 00:00:35,790
+so say whateveryouwantasadomainname.com.
+
+17
+00:00:35,790 --> 00:00:37,190
+Hopefully, that's available.
+
+18
+00:00:38,830 --> 00:00:39,663
+And it's available.
+
+19
+00:00:39,663 --> 00:00:41,810
+So, okay, $12 per year,
+
+20
+00:00:41,810 --> 00:00:44,690
+so just know that it's going to be pricey.
+
+21
+00:00:44,690 --> 00:00:45,610
+Then you add to cart.
+
+22
+00:00:45,610 --> 00:00:47,130
+You say register for one year.
+
+23
+00:00:47,130 --> 00:00:48,960
+You scroll down, say continue.
+
+24
+00:00:48,960 --> 00:00:50,960
+Then you put on all your information
+
+25
+00:00:52,330 --> 00:00:54,260
+and you should enable privacy protection
+
+26
+00:00:54,260 --> 00:00:55,970
+just to make sure that no one can know
+
+27
+00:00:55,970 --> 00:00:57,230
+what's your personal details.
+
+28
+00:00:57,230 --> 00:00:59,810
+So, you click on Enable here, which is by default.
+
+29
+00:00:59,810 --> 00:01:01,700
+Finally, you check your contact details.
+
+30
+00:01:01,700 --> 00:01:04,440
+You check the terms and conditions and say I agree,
+
+31
+00:01:04,440 --> 00:01:06,710
+and then finally, you click on Complete Purchase,
+
+32
+00:01:06,710 --> 00:01:08,720
+and it will go ahead and actually do the purchase.
+
+33
+00:01:08,720 --> 00:01:09,553
+Now, I'm not going to do it
+
+34
+00:01:09,553 --> 00:01:11,120
+because I already have a domain name.
+
+35
+00:01:11,120 --> 00:01:13,140
+Then it'll take about, maybe, an hour to get ready,
+
+36
+00:01:13,140 --> 00:01:15,900
+and then you can follow me along in this class.
+
+37
+00:01:15,900 --> 00:01:18,480
+After doing the request, it will be in Pending requests,
+
+38
+00:01:18,480 --> 00:01:19,790
+and you'll see it and you can see the status.
+
+39
+00:01:19,790 --> 00:01:21,010
+You'll receive some emails.
+
+40
+00:01:21,010 --> 00:01:22,560
+And then when you're all done,
+
+41
+00:01:22,560 --> 00:01:24,020
+it will be under Register Domain,
+
+42
+00:01:24,020 --> 00:01:26,110
+and you'll see the expiration date,
+
+43
+00:01:26,110 --> 00:01:29,060
+whether or not there is auto renew on, et cetera, et cetera.
+
+44
+00:01:29,060 --> 00:01:29,893
+All right.
+
+45
+00:01:29,893 --> 00:01:30,800
+So then you go to Hosted Zone,
+
+46
+00:01:30,800 --> 00:01:32,470
+and automatically because you purchased
+
+47
+00:01:32,470 --> 00:01:34,670
+a domain through Route 53,
+
+48
+00:01:34,670 --> 00:01:37,070
+then a hosted zone will be created for you.
+
+49
+00:01:37,070 --> 00:01:39,270
+And we can go ahead and click on it
+
+50
+00:01:39,270 --> 00:01:41,180
+and start creating some records.
+
+51
+00:01:41,180 --> 00:01:43,500
+So, currently, I do have some records created
+
+52
+00:01:43,500 --> 00:01:46,030
+for some of my applications, but don't worry about it.
+
+53
+00:01:46,030 --> 00:01:47,720
+Right now, you should only have two records.
+
+54
+00:01:47,720 --> 00:01:50,340
+And so what we'll do is that we'll create a record set,
+
+55
+00:01:50,340 --> 00:01:51,960
+and we'll create just a random record set.
+
+56
+00:01:51,960 --> 00:01:53,643
+We'll call it myfirstrecord.
+
+57
+00:01:55,000 --> 00:01:57,410
+And then we'll say A-IPv4 address,
+
+58
+00:01:57,410 --> 00:02:01,310
+and I'll say the value will be 11.22.33.44.
+
+59
+00:02:01,310 --> 00:02:04,790
+Just a very simple DNS record right here,
+
+60
+00:02:04,790 --> 00:02:06,600
+and click on create.
+
+61
+00:02:06,600 --> 00:02:08,770
+And here we go, it's been created.
+
+62
+00:02:08,770 --> 00:02:11,510
+And so now, basically, if I go on the internet
+
+63
+00:02:11,510 --> 00:02:16,510
+and look for this URL, myfirstrecord.stephanetheteacher.com,
+
+64
+00:02:16,520 --> 00:02:19,200
+I will be redirected in the back end
+
+65
+00:02:19,200 --> 00:02:23,920
+to this URL 11.22.33.44, this IPv4 address.
+
+66
+00:02:23,920 --> 00:02:26,440
+Now, obviously because I don't have any servers
+
+67
+00:02:26,440 --> 00:02:28,460
+at this address or anything like that,
+
+68
+00:02:28,460 --> 00:02:31,040
+it will not work, but you get the idea
+
+69
+00:02:31,040 --> 00:02:33,160
+of how these things work.
+
+70
+00:02:33,160 --> 00:02:36,030
+Now, how do we verify programmatically
+
+71
+00:02:36,030 --> 00:02:39,980
+that the DNS record of this thing actually points
+
+72
+00:02:39,980 --> 00:02:42,290
+to this IP is what I want to show you right now.
+
+73
+00:02:42,290 --> 00:02:44,750
+So, for this, we will go to the command line,
+
+74
+00:02:44,750 --> 00:02:47,190
+and if you're on Windows, it's called nslookup,
+
+75
+00:02:47,190 --> 00:02:48,710
+and you type the domain name.
+
+76
+00:02:48,710 --> 00:02:50,420
+So, my domain name here was
+
+77
+00:02:50,420 --> 00:02:53,194
+myfirstrecord.stephanetheteacher.com, so let's do it.
+
+78
+00:02:53,194 --> 00:02:55,227
+myfirstrecord.stephanetheteacher.com,
+
+79
+00:02:58,400 --> 00:03:01,010
+and this will give you something like this in Windows.
+
+80
+00:03:01,010 --> 00:03:01,843
+So, it tells you
+
+81
+00:03:01,843 --> 00:03:04,230
+that myfirstrecord.stephanetheteacher.com resolves
+
+82
+00:03:04,230 --> 00:03:07,940
+to 11.22.33.44, which is excellent.
+
+83
+00:03:07,940 --> 00:03:10,360
+And if you're on Mac, and I'll use this because I'm
+
+84
+00:03:10,360 --> 00:03:12,960
+on Mac and I'm more familiar with dig command,
+
+85
+00:03:12,960 --> 00:03:17,960
+you type dig and then myfirstrecord.stephanetheteacher.com,
+
+86
+00:03:18,350 --> 00:03:19,680
+and it give you something similar,
+
+87
+00:03:19,680 --> 00:03:21,460
+just a little bit more information.
+
+88
+00:03:21,460 --> 00:03:23,220
+So, here we see from the answer section
+
+89
+00:03:23,220 --> 00:03:25,710
+that myfirstrecord.stephanetheteacher.com
+
+90
+00:03:25,710 --> 00:03:28,710
+is the same, 11.22.33.44.
+
+91
+00:03:28,710 --> 00:03:30,260
+So, you're free to use whatever command you want.
+
+92
+00:03:30,260 --> 00:03:31,093
+If you're on Windows, nslookup.
+
+93
+00:03:31,093 --> 00:03:33,850
+If you're on Mac, Linux, use dig.
+
+94
+00:03:33,850 --> 00:03:35,080
+It's whatever you want, really.
+
+95
+00:03:35,080 --> 00:03:36,940
+I like dig, so I'll just follow along with dig,
+
+96
+00:03:36,940 --> 00:03:38,850
+but you're free to just use whatever you want.
+
+97
+00:03:38,850 --> 00:03:42,040
+So, this is how we check that a DNS record works.
+
+98
+00:03:42,040 --> 00:03:43,420
+I will say we haven't achieved much here.
+
+99
+00:03:43,420 --> 00:03:45,710
+We just created a record pointing to an IP
+
+100
+00:03:45,710 --> 00:03:48,150
+that we don't control, so there's not much going on,
+
+101
+00:03:48,150 --> 00:03:49,370
+but we'll see in this lecture
+
+102
+00:03:49,370 --> 00:03:53,450
+how we can make things interesting with a Root 53 DNS
+
+103
+00:03:53,450 --> 00:03:55,180
+and some applications running in the background,
+
+104
+00:03:55,180 --> 00:03:56,730
+so see you in the next lecture.
+
