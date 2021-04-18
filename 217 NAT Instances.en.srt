@@ -1,0 +1,1004 @@
+1
+00:00:00,290 --> 00:00:02,080
+<v Instructor>We have our instances in our</v>
+
+2
+00:00:02,080 --> 00:00:04,950
+public subnet that have internet connectivity
+
+3
+00:00:04,950 --> 00:00:06,870
+thanks to the internet gateway.
+
+4
+00:00:06,870 --> 00:00:09,660
+But for our instances in our private subnet,
+
+5
+00:00:09,660 --> 00:00:11,680
+they cannot access the internet.
+
+6
+00:00:11,680 --> 00:00:14,180
+If they were to access it through the internet gateway,
+
+7
+00:00:14,180 --> 00:00:17,630
+they would also be directly accessible from the internet.
+
+8
+00:00:17,630 --> 00:00:19,160
+So for this, we need a better solution,
+
+9
+00:00:19,160 --> 00:00:20,780
+and that solution is a NAT.
+
+10
+00:00:20,780 --> 00:00:23,335
+NAT stands for Network Address Translation.
+
+11
+00:00:23,335 --> 00:00:27,220
+Now NAT comes in two flavors, it comes with NAT Instances,
+
+12
+00:00:27,220 --> 00:00:29,610
+which is really outdated, not recommended, but still
+
+13
+00:00:29,610 --> 00:00:31,750
+gonna appear at the exam, and you also have
+
+14
+00:00:31,750 --> 00:00:34,320
+NAT Gateways that we'll see in the next lecture.
+
+15
+00:00:34,320 --> 00:00:37,310
+So in this lecture it's all about NAT Instances.
+
+16
+00:00:37,310 --> 00:00:40,150
+These NAT Instances will allow our other instances
+
+17
+00:00:40,150 --> 00:00:42,710
+in the private subnet to connect to the internet.
+
+18
+00:00:42,710 --> 00:00:45,210
+Our NAT Instances must be launched in a public subnet
+
+19
+00:00:45,210 --> 00:00:47,830
+so that they have internet connectivity, and you must
+
+20
+00:00:47,830 --> 00:00:51,720
+disable an EC2 flag called Source Destination Check.
+
+21
+00:00:51,720 --> 00:00:53,240
+We'll see this in the hands on.
+
+22
+00:00:53,240 --> 00:00:57,360
+You also must attach an Elastic IP attached to it because
+
+23
+00:00:57,360 --> 00:01:01,040
+our route table will be going to directly a fixed IP.
+
+24
+00:01:01,040 --> 00:01:03,920
+And the route table must be configured to route traffic
+
+25
+00:01:03,920 --> 00:01:06,650
+from the private subnets to the NAT Instance.
+
+26
+00:01:06,650 --> 00:01:09,090
+That's for the theory, let's look at it in a diagram.
+
+27
+00:01:09,090 --> 00:01:11,460
+So this is what we have so far, our public EC2
+
+28
+00:01:11,460 --> 00:01:13,840
+can connect thanks to the route table to the
+
+29
+00:01:13,840 --> 00:01:16,455
+internet gateway and then to the internet.
+
+30
+00:01:16,455 --> 00:01:18,909
+Now if we have an instance in a private subnet,
+
+31
+00:01:18,909 --> 00:01:21,840
+right now I cannot connect to anything.
+
+32
+00:01:21,840 --> 00:01:24,818
+And so for this, we have to make a NAT Instance
+
+33
+00:01:24,818 --> 00:01:27,860
+in our public subnet, it will have an Elastic IP
+
+34
+00:01:27,860 --> 00:01:30,090
+attached to it, that's what the little arrow means,
+
+35
+00:01:30,090 --> 00:01:31,720
+and it has it's own security group.
+
+36
+00:01:31,720 --> 00:01:34,620
+And then this NAT Instance, thanks to the router
+
+37
+00:01:34,620 --> 00:01:37,310
+that already exists in the route table, will be able to
+
+38
+00:01:37,310 --> 00:01:40,200
+talk to the internet gateway and access the internet.
+
+39
+00:01:40,200 --> 00:01:42,900
+Now we need to basically do a bridge between
+
+40
+00:01:42,900 --> 00:01:45,809
+our private EC2 and our NAT Instance and for this,
+
+41
+00:01:45,809 --> 00:01:49,770
+we're going to change the route table in our private subnet,
+
+42
+00:01:49,770 --> 00:01:52,510
+and basically this route table is going to point
+
+43
+00:01:52,510 --> 00:01:55,020
+to the NAT Instance directly, and this will allow
+
+44
+00:01:55,020 --> 00:01:58,560
+our private EC2 to be directed to the NAT Instance
+
+45
+00:01:58,560 --> 00:02:01,540
+which will be directed all the way to the internet.
+
+46
+00:02:01,540 --> 00:02:04,030
+So that's for the theory, let's go with the hands on now.
+
+47
+00:02:04,030 --> 00:02:06,190
+So let's go ahead with creating our NAT Instance.
+
+48
+00:02:06,190 --> 00:02:08,700
+For this, we'll go to the EC2 measurement console.
+
+49
+00:02:08,700 --> 00:02:10,270
+We're going to launch our instance.
+
+50
+00:02:10,270 --> 00:02:13,350
+In the search bar I'm going to type in NAT, N A T,
+
+51
+00:02:13,350 --> 00:02:17,090
+and we have directly, pressing enter, recommendations,
+
+52
+00:02:17,090 --> 00:02:19,720
+22 in the marketplace and 326 results
+
+53
+00:02:19,720 --> 00:02:22,440
+in the community AMI, we're going to use the community AMI.
+
+54
+00:02:22,440 --> 00:02:24,760
+And the first one is provided by Amazon,
+
+55
+00:02:24,760 --> 00:02:28,710
+which is a VPC NAT on HVM, this is a recent enough date,
+
+56
+00:02:28,710 --> 00:02:30,370
+so we'll just choose this one.
+
+57
+00:02:30,370 --> 00:02:33,720
+We'll click on select, we'll run it on a T2 Micro,
+
+58
+00:02:33,720 --> 00:02:36,330
+and then click on configure instance details.
+
+59
+00:02:36,330 --> 00:02:38,620
+We'll launch one instance, network-wise,
+
+60
+00:02:38,620 --> 00:02:41,680
+we'll launch it on our demo VPC, and subnet-wise,
+
+61
+00:02:41,680 --> 00:02:45,410
+just for fun, we'll launch it in our public subnet B.
+
+62
+00:02:45,410 --> 00:02:47,120
+Okay, we'll use the subnet setting and
+
+63
+00:02:47,120 --> 00:02:49,601
+auto assign and public IP, this is great.
+
+64
+00:02:49,601 --> 00:02:52,160
+Then I will scroll down.
+
+65
+00:02:52,160 --> 00:02:53,970
+We don't change anything right here,
+
+66
+00:02:53,970 --> 00:02:57,890
+everything looks good, and then I click on next.
+
+67
+00:02:57,890 --> 00:03:01,420
+Okay, that's storage, this storage looks good as well.
+
+68
+00:03:01,420 --> 00:03:06,410
+Add tags, this one I'll just name it NAT Instance
+
+69
+00:03:06,410 --> 00:03:09,380
+just so we can recognize it in our UI.
+
+70
+00:03:09,380 --> 00:03:11,240
+Click on the configure security group,
+
+71
+00:03:11,240 --> 00:03:12,990
+and here we have to create a new security group,
+
+72
+00:03:12,990 --> 00:03:17,450
+I'll call it NAT SG, NAT Security Group,
+
+73
+00:03:17,450 --> 00:03:20,220
+and so we have to allow a few rules, so let's get started.
+
+74
+00:03:20,220 --> 00:03:22,530
+The first rule is SSH, and you can restrict
+
+75
+00:03:22,530 --> 00:03:24,320
+it to your IP if you wanted to.
+
+76
+00:03:24,320 --> 00:03:27,660
+Then I'm going to add HTTP, and this rule basically
+
+77
+00:03:27,660 --> 00:03:30,510
+should allow port 80, but not coming from everywhere,
+
+78
+00:03:30,510 --> 00:03:33,100
+it should just be coming from our VPC,
+
+79
+00:03:33,100 --> 00:03:37,140
+so our VPC is defined as 10.0.0.0/16 if you remember,
+
+80
+00:03:37,140 --> 00:03:40,003
+so I will just allow HTTP from VPC.
+
+81
+00:03:41,950 --> 00:03:45,691
+HTTP from VPC, just so we remember, and here again,
+
+82
+00:03:45,691 --> 00:03:47,860
+we're going to add one last rule,
+
+83
+00:03:47,860 --> 00:03:51,300
+for HTTPS from the VPC as well so I'll just copy
+
+84
+00:03:51,300 --> 00:03:55,700
+this entire sider and we'll allow HTTPS from the VPC.
+
+85
+00:03:55,700 --> 00:03:57,660
+And these are the necessary security group rules
+
+86
+00:03:57,660 --> 00:04:00,290
+when you define a NAT Instance.
+
+87
+00:04:00,290 --> 00:04:03,300
+Click on review and launch, and this is great, we're just
+
+88
+00:04:03,300 --> 00:04:07,360
+going with the recommended, and click on next, and then
+
+89
+00:04:07,360 --> 00:04:11,365
+click on launch, and then I'll say okay acknowledge.
+
+90
+00:04:11,365 --> 00:04:12,610
+Okay.
+
+91
+00:04:12,610 --> 00:04:15,760
+So now our instance is launching, and while this happens
+
+92
+00:04:15,760 --> 00:04:17,680
+I'm going to launch one last instance.
+
+93
+00:04:17,680 --> 00:04:19,850
+I'm going to launch a private instance.
+
+94
+00:04:19,850 --> 00:04:23,510
+So for this, I'm gonna go to Amazon Linux AMI,
+
+95
+00:04:23,510 --> 00:04:27,100
+click on select, I'll select a T2 Micro.
+
+96
+00:04:27,100 --> 00:04:29,854
+Okay, click on configure instance details,
+
+97
+00:04:29,854 --> 00:04:33,750
+and then I will select the network to be demo VPC,
+
+98
+00:04:33,750 --> 00:04:35,550
+the subnet this time I'm going to make it in
+
+99
+00:04:35,550 --> 00:04:39,603
+private subnet A, and I will not have an IP address,
+
+100
+00:04:39,603 --> 00:04:41,820
+our public IP is disabled by default because
+
+101
+00:04:41,820 --> 00:04:44,210
+it's not a public instance anyway.
+
+102
+00:04:44,210 --> 00:04:47,940
+Okay this looks good, now I'll click on add storage,
+
+103
+00:04:47,940 --> 00:04:52,940
+add tags, I'll just name this instance Private Instance,
+
+104
+00:04:54,110 --> 00:04:57,000
+and click on next configure security group.
+
+105
+00:04:57,000 --> 00:04:59,850
+Here we can configure security group and we can
+
+106
+00:04:59,850 --> 00:05:04,050
+just have port 22 coming from everywhere, or we can say
+
+107
+00:05:04,050 --> 00:05:07,770
+only port 22 coming from our VPC Vericles,
+
+108
+00:05:07,770 --> 00:05:11,760
+so SSH only from within the VPC because this is a
+
+109
+00:05:11,760 --> 00:05:14,410
+private instance so it does not expect anywhere else
+
+110
+00:05:14,410 --> 00:05:17,270
+to have an SSH connection from, and click on review
+
+111
+00:05:17,270 --> 00:05:19,830
+and launch, I will launch it as well.
+
+112
+00:05:19,830 --> 00:05:22,784
+I acknowledge and I will basically instead of
+
+113
+00:05:22,784 --> 00:05:26,680
+using the same key pair, I'll create a new key pair,
+
+114
+00:05:26,680 --> 00:05:29,793
+and this key pair name, I'll call it private instance
+
+115
+00:05:29,793 --> 00:05:32,210
+key pair because this is something that's gonna be
+
+116
+00:05:32,210 --> 00:05:33,940
+just specific to my private instance and
+
+117
+00:05:33,940 --> 00:05:35,050
+I'm going to show you in a second so
+
+118
+00:05:35,050 --> 00:05:37,510
+I want to be able to create a new key pair.
+
+119
+00:05:37,510 --> 00:05:39,190
+So here is my private instance key pair that
+
+120
+00:05:39,190 --> 00:05:40,960
+has been downloaded, I'll click on
+
+121
+00:05:40,960 --> 00:05:43,650
+launch instances, and here we go.
+
+122
+00:05:43,650 --> 00:05:45,360
+Now we click on view instances, and
+
+123
+00:05:45,360 --> 00:05:46,860
+let's have a look at what happens.
+
+124
+00:05:46,860 --> 00:05:50,740
+So we have a NAT Instance in EUS 1B,
+
+125
+00:05:50,740 --> 00:05:54,220
+and we have our private instance in EUS 1A,
+
+126
+00:05:54,220 --> 00:05:56,200
+this is all, these two in public subnets,
+
+127
+00:05:56,200 --> 00:05:57,800
+this one is in the private subnets,
+
+128
+00:05:57,800 --> 00:06:00,730
+and this one remember, because this is a NAT Instance,
+
+129
+00:06:00,730 --> 00:06:03,310
+we have to make sure that it has
+
+130
+00:06:05,230 --> 00:06:06,980
+disabled source destination check.
+
+131
+00:06:06,980 --> 00:06:09,810
+So for this, I right click on it, click on networking,
+
+132
+00:06:09,810 --> 00:06:12,120
+and click on change source destination check,
+
+133
+00:06:12,120 --> 00:06:14,180
+and this is something you should keep enabled
+
+134
+00:06:14,180 --> 00:06:17,030
+for every instance except NAT Instances because
+
+135
+00:06:17,030 --> 00:06:19,950
+they're very special, so let's say yes, disable.
+
+136
+00:06:19,950 --> 00:06:21,580
+And this is what the documentation recommends,
+
+137
+00:06:21,580 --> 00:06:26,580
+so if you type source destination check NAT Instance
+
+138
+00:06:26,580 --> 00:06:29,927
+in the documentation it just says however a
+
+139
+00:06:29,927 --> 00:06:33,070
+NAT Instance must be able to send a receive traffic
+
+140
+00:06:33,070 --> 00:06:35,310
+when the source destination is not itself.
+
+141
+00:06:35,310 --> 00:06:36,710
+Therefore, you must disable source
+
+142
+00:06:36,710 --> 00:06:39,240
+destination text on NAT Instances.
+
+143
+00:06:39,240 --> 00:06:40,740
+So we've done that, now let's go ahead
+
+144
+00:06:40,740 --> 00:06:43,020
+and first SSH into our private instance.
+
+145
+00:06:43,020 --> 00:06:46,460
+For this, I'm going to SSH into my public instance,
+
+146
+00:06:46,460 --> 00:06:48,340
+and from my public instance I will be able
+
+147
+00:06:48,340 --> 00:06:51,340
+to SSH into my private instance, so let's do this right now.
+
+148
+00:06:52,310 --> 00:06:54,140
+I'm in my public instance right here,
+
+149
+00:06:54,140 --> 00:06:56,500
+and the first thing we have to do, is to basically
+
+150
+00:06:56,500 --> 00:06:58,580
+recreate the key pair I have just downloaded
+
+151
+00:06:58,580 --> 00:07:02,860
+onto this EC2 Instance, so I'm going to open a new tab,
+
+152
+00:07:02,860 --> 00:07:06,300
+and I'm going to cat the content of my downloaded,
+
+153
+00:07:06,300 --> 00:07:09,270
+my new key pair, so this one.
+
+154
+00:07:09,270 --> 00:07:11,550
+I'm going to copy this, now remember this is not
+
+155
+00:07:11,550 --> 00:07:13,550
+something you want to do in production,
+
+156
+00:07:13,550 --> 00:07:15,230
+we have better ways of doing these kinds of things,
+
+157
+00:07:15,230 --> 00:07:17,240
+but right now I'm just doing it manually.
+
+158
+00:07:17,240 --> 00:07:20,086
+So I'll copy this RSA private key, and I will just
+
+159
+00:07:20,086 --> 00:07:23,840
+basically put it on to my EC2 instance.
+
+160
+00:07:23,840 --> 00:07:26,800
+We could use SCP if you wanted to if you knew what SCP is,
+
+161
+00:07:26,800 --> 00:07:28,470
+but right now we'll just do things manually,
+
+162
+00:07:28,470 --> 00:07:31,860
+so I'll just do nano, and then private,
+
+163
+00:07:31,860 --> 00:07:33,190
+what's the name of that file again?
+
+164
+00:07:33,190 --> 00:07:37,340
+Private instance KP dot PM, and I'll just
+
+165
+00:07:37,340 --> 00:07:42,190
+paste the content, control X, yes, enter.
+
+166
+00:07:42,190 --> 00:07:45,210
+And now I'm going to do a chmod just to be able to
+
+167
+00:07:45,210 --> 00:07:49,120
+set the right permissions on this file, so here we go.
+
+168
+00:07:49,120 --> 00:07:51,223
+And now using this, I should be able to SSH
+
+169
+00:07:51,223 --> 00:07:54,037
+from my public to my private, so I'll do
+
+170
+00:07:54,037 --> 00:07:58,790
+SSH EC2 user at, and now I need the private IP
+
+171
+00:07:58,790 --> 00:08:00,880
+as my private instance, so my private instance
+
+172
+00:08:00,880 --> 00:08:02,980
+is right here, and it has a private IP,
+
+173
+00:08:02,980 --> 00:08:06,640
+so I'll copy this, paste it, minus I and I'll just
+
+174
+00:08:06,640 --> 00:08:10,130
+specify my instance key and click on yes.
+
+175
+00:08:10,130 --> 00:08:13,150
+And here we go, I am into my instance, LS,
+
+176
+00:08:13,150 --> 00:08:16,770
+so I am on to my private instance right now,
+
+177
+00:08:16,770 --> 00:08:20,909
+IP 10-0-21-95, and if we try to just, for example,
+
+178
+00:08:20,909 --> 00:08:23,460
+ping google.com, so if you want to access
+
+179
+00:08:23,460 --> 00:08:25,860
+google.com it doesn't work, it does not have
+
+180
+00:08:25,860 --> 00:08:27,800
+internet yet, which is what we expect.
+
+181
+00:08:27,800 --> 00:08:30,300
+But we have created a NAT Instance, so we should
+
+182
+00:08:30,300 --> 00:08:33,030
+be able to provide that instance with internet.
+
+183
+00:08:33,030 --> 00:08:33,940
+So how do we do this?
+
+184
+00:08:33,940 --> 00:08:34,920
+This didn't work.
+
+185
+00:08:34,920 --> 00:08:36,180
+So how do we do this?
+
+186
+00:08:36,180 --> 00:08:39,426
+Well, we go into our route table, and for our private
+
+187
+00:08:39,426 --> 00:08:42,270
+route table, we're going to create a new route.
+
+188
+00:08:42,270 --> 00:08:44,760
+And so, I enter edit routes, and then I'll click
+
+189
+00:08:44,760 --> 00:08:49,380
+add routes and 000/0 so any connection outgoing
+
+190
+00:08:49,380 --> 00:08:51,770
+to the internet, this time is not going to
+
+191
+00:08:51,770 --> 00:08:53,540
+the internet gateway, because that would make my
+
+192
+00:08:53,540 --> 00:08:57,430
+instances public, instead it's going to an instance,
+
+193
+00:08:57,430 --> 00:08:58,960
+and this is a NAT Instance, and I'll just
+
+194
+00:08:58,960 --> 00:09:00,930
+click here and say NAT Instance.
+
+195
+00:09:00,930 --> 00:09:03,700
+So now we're saying for all my instances in my
+
+196
+00:09:03,700 --> 00:09:06,710
+private subnet, anytime you hit an IP that's not
+
+197
+00:09:06,710 --> 00:09:09,477
+local, then talk to this NAT Instance.
+
+198
+00:09:09,477 --> 00:09:13,330
+Save the routes, routes have been saved successfully.
+
+199
+00:09:13,330 --> 00:09:16,470
+And so now, in our private route table, it turns out
+
+200
+00:09:16,470 --> 00:09:19,060
+that the destination for public traffic should go
+
+201
+00:09:19,060 --> 00:09:21,890
+through this ENI, and if you click on this ENI
+
+202
+00:09:21,890 --> 00:09:24,496
+we obviously get redirected directly to our NAT.
+
+203
+00:09:24,496 --> 00:09:28,040
+So now I can go into my instance, and I can do
+
+204
+00:09:28,040 --> 00:09:31,540
+curl google.com and this just gives me a URL,
+
+205
+00:09:31,540 --> 00:09:35,467
+so it says it has moved, so I can curl www.google.com
+
+206
+00:09:35,467 --> 00:09:38,540
+but basically my private instance does get access
+
+207
+00:09:38,540 --> 00:09:41,400
+to the internet, which is amazing, but if you try
+
+208
+00:09:41,400 --> 00:09:44,860
+to ping google.com, we see it's not working.
+
+209
+00:09:44,860 --> 00:09:46,540
+So we know we have internet connectivity,
+
+210
+00:09:46,540 --> 00:09:50,110
+but the trick is in your instance, your NAT Instance,
+
+211
+00:09:50,110 --> 00:09:53,560
+your security group, you can also add the protocol
+
+212
+00:09:53,560 --> 00:09:56,901
+which allows you to use the ping, you add a rule,
+
+213
+00:09:56,901 --> 00:10:01,283
+and this is going to be all the ICMP for IVP four,
+
+214
+00:10:01,283 --> 00:10:05,160
+and will allow this coming from our VPC,
+
+215
+00:10:05,160 --> 00:10:10,160
+so I'll just say allow ping from VPC, save this security
+
+216
+00:10:10,360 --> 00:10:13,859
+group rule, and now if we do a ping of google.com,
+
+217
+00:10:13,859 --> 00:10:16,980
+we do get an answer back, and we see it's working.
+
+218
+00:10:16,980 --> 00:10:19,000
+So this was a long lecture, I know.
+
+219
+00:10:19,000 --> 00:10:21,646
+But we set up basically a NAT Instance,
+
+220
+00:10:21,646 --> 00:10:24,250
+which allowed our private instance to talk
+
+221
+00:10:24,250 --> 00:10:26,840
+to it and to get internet access.
+
+222
+00:10:26,840 --> 00:10:30,770
+Now I have to say, all this thing is very hard to manage
+
+223
+00:10:30,770 --> 00:10:33,710
+and as you can see, there is a lot of moving parts,
+
+224
+00:10:33,710 --> 00:10:36,220
+so let's see what that means for the exam.
+
+225
+00:10:36,220 --> 00:10:38,110
+To comment on the setup, so we've been using an
+
+226
+00:10:38,110 --> 00:10:40,070
+Amazon Linux AMI that came pre-configured
+
+227
+00:10:40,070 --> 00:10:43,130
+with NAT capabilities, and this is nice, but what we did
+
+228
+00:10:43,130 --> 00:10:45,150
+was not highly available, it's not really resilient.
+
+229
+00:10:45,150 --> 00:10:47,870
+If we lose our NAT, we lose our internet connectivity,
+
+230
+00:10:47,870 --> 00:10:50,890
+so we need to set up maybe an ASG that is multi-easy
+
+231
+00:10:50,890 --> 00:10:53,340
+with a resilient user data script, maybe use
+
+232
+00:10:53,340 --> 00:10:56,059
+an Elastic IP to guarantee some IP addresses
+
+233
+00:10:56,059 --> 00:10:57,150
+even though it is going to be stable,
+
+234
+00:10:57,150 --> 00:10:58,320
+I mean it could be horrible.
+
+235
+00:10:58,320 --> 00:11:00,390
+And then the internet traffic will depend
+
+236
+00:11:00,390 --> 00:11:02,680
+on our EC2 instance performance, so right now
+
+237
+00:11:02,680 --> 00:11:04,540
+we have a T2 micro, so we don't expect to have
+
+238
+00:11:04,540 --> 00:11:06,600
+very high network throughput, but if we have
+
+239
+00:11:06,600 --> 00:11:08,190
+a larger instance, we're going to pay more
+
+240
+00:11:08,190 --> 00:11:09,549
+and get better networking, but overall,
+
+241
+00:11:09,549 --> 00:11:11,890
+it's so tricky, and then we must manage
+
+242
+00:11:11,890 --> 00:11:13,559
+security groups and rules, so you see, I couldn't
+
+243
+00:11:13,559 --> 00:11:15,959
+ping Google right away, I had to add the rules.
+
+244
+00:11:15,959 --> 00:11:18,570
+So we need to set the inbound rules and some
+
+245
+00:11:18,570 --> 00:11:20,170
+outbound rules, et cetera, et cetera.
+
+246
+00:11:20,170 --> 00:11:21,150
+I mean, it's tricky.
+
+247
+00:11:21,150 --> 00:11:22,530
+It's really, really tricky.
+
+248
+00:11:22,530 --> 00:11:25,070
+So overall, NAT Instances are old, they're the
+
+249
+00:11:25,070 --> 00:11:26,780
+old way of doing things, and in the next lecture
+
+250
+00:11:26,780 --> 00:11:29,190
+we'll see NAT Gateways to see how we can do things
+
+251
+00:11:29,190 --> 00:11:31,340
+in a much better way, so let's get started.
+

@@ -1,0 +1,924 @@
+1
+00:00:00,090 --> 00:00:01,760
+<v ->Okay so our diagram is getting fuller</v>
+
+2
+00:00:01,760 --> 00:00:02,593
+and fuller by the day.
+
+3
+00:00:02,593 --> 00:00:05,370
+So now let's talk about how do we talk
+
+4
+00:00:05,370 --> 00:00:06,760
+to AWS services.
+
+5
+00:00:06,760 --> 00:00:10,540
+So as we know DynamoDB, CloudWatch, S3,
+
+6
+00:00:10,540 --> 00:00:13,550
+these all within the AWS cloud.
+
+7
+00:00:13,550 --> 00:00:16,270
+Although if we want to access those right now
+
+8
+00:00:16,270 --> 00:00:18,740
+from a private EC2 instance,
+
+9
+00:00:18,740 --> 00:00:21,490
+what we need to do is have that EC2 instance
+
+10
+00:00:21,490 --> 00:00:24,650
+talk to our VPC NAT gateway
+
+11
+00:00:24,650 --> 00:00:26,290
+and then to the internet gateway,
+
+12
+00:00:26,290 --> 00:00:27,600
+and then all of a sudden
+
+13
+00:00:27,600 --> 00:00:29,090
+there is a internet route
+
+14
+00:00:29,090 --> 00:00:30,820
+through the public internet,
+
+15
+00:00:30,820 --> 00:00:33,390
+directly into, for example, DynamoGB.
+
+16
+00:00:33,390 --> 00:00:36,540
+And that is problematic, because we'd like
+
+17
+00:00:36,540 --> 00:00:38,550
+all this traffic to remain private,
+
+18
+00:00:38,550 --> 00:00:43,230
+because DynamoDB after all is a service offered within AWS.
+
+19
+00:00:43,230 --> 00:00:46,200
+So enter VPC endpoints, right here.
+
+20
+00:00:46,200 --> 00:00:48,450
+And so VPC endpoints are meant
+
+21
+00:00:48,450 --> 00:00:51,610
+for you to access AWS services
+
+22
+00:00:51,610 --> 00:00:53,860
+within a private network.
+
+23
+00:00:53,860 --> 00:00:54,960
+So how does that work?
+
+24
+00:00:54,960 --> 00:00:56,518
+Well, with the VPC endpoint,
+
+25
+00:00:56,518 --> 00:00:57,640
+it'll create maybe an endpoint to S3
+
+26
+00:00:59,163 --> 00:01:00,810
+or an endpoint to CloudWatch.
+
+27
+00:01:00,810 --> 00:01:02,792
+There's ways to create endpoints
+
+28
+00:01:02,792 --> 00:01:05,000
+to many different AWS services.
+
+29
+00:01:05,000 --> 00:01:08,000
+And our instance is, through some route table
+
+30
+00:01:08,000 --> 00:01:10,190
+we'll be able to, for example,
+
+31
+00:01:10,190 --> 00:01:12,610
+from a private subnet, access directly
+
+32
+00:01:12,610 --> 00:01:15,665
+that endpoint and talk to our Amazon S3
+
+33
+00:01:15,665 --> 00:01:18,590
+or Amazon CloudWatch service privately.
+
+34
+00:01:18,590 --> 00:01:20,170
+Which is really cool, but it's something
+
+35
+00:01:20,170 --> 00:01:21,870
+we have to set up directly.
+
+36
+00:01:21,870 --> 00:01:24,660
+It is not something that's available out of the box.
+
+37
+00:01:24,660 --> 00:01:27,630
+So VPC endpoints allow you to connect to AWS services
+
+38
+00:01:27,630 --> 00:01:31,420
+using a private network instead of the public internet.
+
+39
+00:01:31,420 --> 00:01:33,330
+They will scale horizontally and are redundant,
+
+40
+00:01:33,330 --> 00:01:34,330
+so it's really good.
+
+41
+00:01:34,330 --> 00:01:35,450
+And they remove all the need
+
+42
+00:01:35,450 --> 00:01:39,300
+to set up an internet gateway, a NAT gateway, et cetera
+
+43
+00:01:39,300 --> 00:01:41,580
+to access all these AWS services.
+
+44
+00:01:41,580 --> 00:01:43,430
+So there's two kind of VPC endpoints,
+
+45
+00:01:43,430 --> 00:01:45,600
+there is the interface VPC endpoints
+
+46
+00:01:45,600 --> 00:01:48,380
+to provide an ENI, and that's a private IP address
+
+47
+00:01:48,380 --> 00:01:50,090
+as an entry point, and we must
+
+48
+00:01:50,090 --> 00:01:51,230
+attach a security group to it.
+
+49
+00:01:51,230 --> 00:01:54,420
+That is how most AWS services work.
+
+50
+00:01:54,420 --> 00:01:57,320
+And then there's a Gateway to provision a target
+
+51
+00:01:57,320 --> 00:01:59,380
+and it must be used in a route table.
+
+52
+00:01:59,380 --> 00:02:02,620
+For example, S3 and DynamoDB are the two services
+
+53
+00:02:02,620 --> 00:02:05,380
+that require a VPC endpoint to gateway.
+
+54
+00:02:05,380 --> 00:02:07,900
+Don't worry we'll see this in the hands on right now.
+
+55
+00:02:07,900 --> 00:02:09,900
+Now in case of issues, two thing to check.
+
+56
+00:02:09,900 --> 00:02:12,230
+You need to check the DNS setting for resolution
+
+57
+00:02:12,230 --> 00:02:14,910
+in your VPC, so we've seen this before.
+
+58
+00:02:14,910 --> 00:02:17,260
+And the other thing to check if you have a gateway,
+
+59
+00:02:17,260 --> 00:02:18,450
+you need to check the route table
+
+60
+00:02:18,450 --> 00:02:20,570
+to make sure that the traffic doesn't decode
+
+61
+00:02:20,570 --> 00:02:21,923
+straight into the gateway.
+
+62
+00:02:22,995 --> 00:02:23,828
+Alright, let's have a go at this.
+
+63
+00:02:23,828 --> 00:02:26,063
+In this lecture, we'll set up S3 as a gateway.
+
+64
+00:02:26,063 --> 00:02:30,190
+And so for this, we just need to do a few bits of set up.
+
+65
+00:02:30,190 --> 00:02:32,000
+So in the first one, we're going to go through our
+
+66
+00:02:32,000 --> 00:02:35,670
+EC2 instances, and we're going to go to a private instance.
+
+67
+00:02:35,670 --> 00:02:37,320
+And this one we're going to sign to it
+
+68
+00:02:37,320 --> 00:02:40,200
+an IAM role that has access to S3.
+
+69
+00:02:40,200 --> 00:02:42,940
+So I'm just going to quickly go into IAM
+
+70
+00:02:42,940 --> 00:02:46,370
+to create a role that has full access to S3.
+
+71
+00:02:46,370 --> 00:02:49,730
+So for this, I go to roles, in here,
+
+72
+00:02:49,730 --> 00:02:52,600
+I'll create a role for EC2,
+
+73
+00:02:52,600 --> 00:02:54,370
+and click on next permissions,
+
+74
+00:02:54,370 --> 00:02:56,740
+then I will search for S3,
+
+75
+00:02:56,740 --> 00:03:00,080
+and it'll say Amazon S3 full access as a great policy.
+
+76
+00:03:00,080 --> 00:03:02,420
+Next tags, next review, then I'll call it
+
+77
+00:03:02,420 --> 00:03:06,640
+S3 full access, and click on create role.
+
+78
+00:03:06,640 --> 00:03:07,820
+Okay the role has been created,
+
+79
+00:03:07,820 --> 00:03:10,240
+so now I can go back to my EC2 instance
+
+80
+00:03:10,240 --> 00:03:12,230
+and I can right click on it.
+
+81
+00:03:12,230 --> 00:03:14,740
+I can go to instance settings,
+
+82
+00:03:14,740 --> 00:03:16,530
+attach/replace IAM role,
+
+83
+00:03:16,530 --> 00:03:19,020
+and here we type S3 full access,
+
+84
+00:03:19,020 --> 00:03:19,983
+and we apply it.
+
+85
+00:03:20,922 --> 00:03:23,480
+Okay, so now let's SSH into our,
+
+86
+00:03:23,480 --> 00:03:25,730
+did I assign to the wrong one?
+
+87
+00:03:25,730 --> 00:03:26,830
+No I assigned to the right one,
+
+88
+00:03:26,830 --> 00:03:27,850
+so this one, okay.
+
+89
+00:03:27,850 --> 00:03:31,170
+So now let's SSH into this private IP.
+
+90
+00:03:31,170 --> 00:03:33,670
+So for this, we'll do the SSH commands
+
+91
+00:03:33,670 --> 00:03:35,330
+on my instance on the right hand side.
+
+92
+00:03:35,330 --> 00:03:37,350
+I can remove this one, we don't need it.
+
+93
+00:03:37,350 --> 00:03:40,490
+So we're going to SSH into our private instance
+
+94
+00:03:40,490 --> 00:03:42,370
+from my public instance,
+
+95
+00:03:42,370 --> 00:03:44,920
+and press enter and here we go, we're in it.
+
+96
+00:03:44,920 --> 00:03:48,470
+And so if I do AWS S3 LS,
+
+97
+00:03:48,470 --> 00:03:49,800
+I should be getting an answer from it.
+
+98
+00:03:49,800 --> 00:03:52,260
+It says here are all the buckets
+
+99
+00:03:52,260 --> 00:03:53,600
+that are available for me.
+
+100
+00:03:53,600 --> 00:03:54,970
+So this works right,
+
+101
+00:03:54,970 --> 00:03:56,100
+but now what we're going to do
+
+102
+00:03:56,100 --> 00:03:57,900
+is we're going to completely cut off
+
+103
+00:03:57,900 --> 00:04:00,160
+the internet off of the instance.
+
+104
+00:04:00,160 --> 00:04:02,110
+So let's go to our private route table,
+
+105
+00:04:03,117 --> 00:04:05,440
+and now we're going to remove the destination as a NAT,
+
+106
+00:04:05,440 --> 00:04:07,900
+because we want to remove internet access.
+
+107
+00:04:07,900 --> 00:04:09,650
+So I save the route and here we go.
+
+108
+00:04:10,575 --> 00:04:12,080
+Now our instance doesn't now have access to the net,
+
+109
+00:04:12,080 --> 00:04:14,980
+and so if I do AWS S3 LS again,
+
+110
+00:04:14,980 --> 00:04:17,360
+now it just times out, it cannot access
+
+111
+00:04:17,360 --> 00:04:20,000
+to S3 service over the public net.
+
+112
+00:04:20,000 --> 00:04:21,660
+So now let's solve this problem
+
+113
+00:04:21,660 --> 00:04:23,520
+using a VPC endpoint.
+
+114
+00:04:23,520 --> 00:04:26,240
+So for this, I'm going to go to endpoints,
+
+115
+00:04:26,240 --> 00:04:28,820
+and I need to create an endpoint.
+
+116
+00:04:28,820 --> 00:04:29,730
+Okay this is great.
+
+117
+00:04:29,730 --> 00:04:31,280
+I need you to select service categories,
+
+118
+00:04:31,280 --> 00:04:34,940
+so it could be AWS services or marketplace services.
+
+119
+00:04:34,940 --> 00:04:36,780
+For now the only thing we need to do really
+
+120
+00:04:36,780 --> 00:04:38,400
+is to go into S3.
+
+121
+00:04:38,400 --> 00:04:40,410
+And so let's look at this first.
+
+122
+00:04:40,410 --> 00:04:42,040
+These are all the AWS services,
+
+123
+00:04:42,040 --> 00:04:44,552
+so you can see there's a lot of them,
+
+124
+00:04:44,552 --> 00:04:45,385
+and some of them are interface,
+
+125
+00:04:45,385 --> 00:04:46,740
+actually most of them are interface,
+
+126
+00:04:46,740 --> 00:04:49,693
+but S3 ends another one.
+
+127
+00:04:49,693 --> 00:04:51,840
+Up there sorry.
+
+128
+00:04:51,840 --> 00:04:54,160
+DynamoDB is a gateway.
+
+129
+00:04:54,160 --> 00:04:56,230
+So these two are going to be gateway set up,
+
+130
+00:04:56,230 --> 00:04:58,480
+and the other ones could be interface set up.
+
+131
+00:04:59,720 --> 00:05:01,433
+So let's look quickly at, for example, interface set up.
+
+132
+00:05:01,433 --> 00:05:03,070
+So let's look at cloud formation.
+
+133
+00:05:03,930 --> 00:05:05,160
+When you do an interface set up,
+
+134
+00:05:05,160 --> 00:05:08,270
+you have to define in which subnets your endpoint
+
+135
+00:05:09,137 --> 00:05:09,970
+is going to live, and then
+
+136
+00:05:09,970 --> 00:05:12,390
+whether you want to enable private DNS name.
+
+137
+00:05:12,390 --> 00:05:14,430
+And for this it says, if you do enable this
+
+138
+00:05:14,430 --> 00:05:17,890
+ensure that enable DNS host name and enable DNS support
+
+139
+00:05:17,890 --> 00:05:19,230
+are set to true in your VPC.
+
+140
+00:05:19,230 --> 00:05:22,100
+So that's a very common troubleshooting question.
+
+141
+00:05:22,100 --> 00:05:24,360
+And then we need to assign a security group
+
+142
+00:05:24,360 --> 00:05:25,650
+to this endpoint.
+
+143
+00:05:25,650 --> 00:05:26,740
+But we're not going to do this
+
+144
+00:05:26,740 --> 00:05:28,340
+for cloud formation right now.
+
+145
+00:05:28,340 --> 00:05:30,120
+What we're going to do is go straight
+
+146
+00:05:30,120 --> 00:05:33,133
+to S3 and set up a gateway. So when you set up the gateway,
+
+147
+00:05:33,133 --> 00:05:34,720
+it's a little bit different.
+
+148
+00:05:34,720 --> 00:05:35,900
+You need to select your VPC,
+
+149
+00:05:35,900 --> 00:05:38,410
+so we'll select our demo VPC.
+
+150
+00:05:38,410 --> 00:05:40,070
+And this will basically create a rule
+
+151
+00:05:40,070 --> 00:05:42,710
+with a destination pl will be added
+
+152
+00:05:42,710 --> 00:05:44,240
+to the route table you select below.
+
+153
+00:05:44,240 --> 00:05:46,470
+So let's select the route table we want,
+
+154
+00:05:46,470 --> 00:05:49,180
+and we want to have our private route table.
+
+155
+00:05:49,180 --> 00:05:50,013
+So that's this one.
+
+156
+00:05:50,013 --> 00:05:51,140
+And then I knew it because
+
+157
+00:05:51,140 --> 00:05:53,190
+if I hover over the subnet,
+
+158
+00:05:53,190 --> 00:05:55,520
+it says private subnet A and private subnet B.
+
+159
+00:05:55,520 --> 00:05:57,550
+So I'll click on this route table,
+
+160
+00:05:57,550 --> 00:05:59,010
+and in this route table automatically
+
+161
+00:05:59,010 --> 00:06:01,860
+they will get updated with rule to this destination,
+
+162
+00:06:01,860 --> 00:06:04,180
+which represents Amazon S3.
+
+163
+00:06:04,180 --> 00:06:06,930
+And they will go through this VPC endpoints.
+
+164
+00:06:06,930 --> 00:06:08,503
+Okay policy is full access.
+
+165
+00:06:08,503 --> 00:06:09,940
+This is if you want to control
+
+166
+00:06:09,940 --> 00:06:12,730
+and restrict access to the VPC endpoints
+
+167
+00:06:12,730 --> 00:06:13,810
+in some ways, so we're not
+
+168
+00:06:13,810 --> 00:06:15,360
+going to go over this right now.
+
+169
+00:06:15,360 --> 00:06:16,760
+And click on create endpoints
+
+170
+00:06:16,760 --> 00:06:19,060
+and the VPC endpoint has been created.
+
+171
+00:06:19,060 --> 00:06:20,350
+So if you look at it,
+
+172
+00:06:20,350 --> 00:06:22,810
+it looks like it's pointing to the S3 service name.
+
+173
+00:06:22,810 --> 00:06:25,320
+It's available. It's a gateway type of endpoint,
+
+174
+00:06:25,320 --> 00:06:26,870
+and it's in our demo VPC.
+
+175
+00:06:26,870 --> 00:06:28,780
+And if you look at our route table,
+
+176
+00:06:28,780 --> 00:06:31,330
+it's associated with this route table ID
+
+177
+00:06:31,330 --> 00:06:32,420
+that is associated with two subnets.
+
+178
+00:06:32,420 --> 00:06:35,130
+Now the tricky bit here is if you look
+
+179
+00:06:35,130 --> 00:06:36,650
+for this route table ID.
+
+180
+00:06:36,650 --> 00:06:38,500
+Go back to route table
+
+181
+00:06:38,500 --> 00:06:40,650
+and look for it. So we'll filter.
+
+182
+00:06:40,650 --> 00:06:42,550
+Press enter and go to routes.
+
+183
+00:06:42,550 --> 00:06:46,810
+As we can see, now we get to have the target
+
+184
+00:06:46,810 --> 00:06:50,720
+of this destination, which is basically our endpoints
+
+185
+00:06:50,720 --> 00:06:52,560
+into the VPC endpoints.
+
+186
+00:06:52,560 --> 00:06:54,458
+So really, really cool.
+
+187
+00:06:54,458 --> 00:06:56,240
+Now it says anytime you hit this URL,
+
+188
+00:06:56,240 --> 00:06:57,480
+these CIDRs, basically,
+
+189
+00:06:57,480 --> 00:06:59,130
+which are the Amazon S3 CIDRS,
+
+190
+00:06:59,130 --> 00:07:00,790
+then go to this targets.
+
+191
+00:07:00,790 --> 00:07:02,210
+If you wanted to edit the route,
+
+192
+00:07:02,210 --> 00:07:03,860
+you could basically add a route,
+
+193
+00:07:03,860 --> 00:07:06,141
+but you could not directly change this one
+
+194
+00:07:06,141 --> 00:07:07,260
+in this UI.
+
+195
+00:07:07,260 --> 00:07:09,120
+What you would have to do to change this one
+
+196
+00:07:09,120 --> 00:07:12,900
+is go back to your endpoints and in there,
+
+197
+00:07:12,900 --> 00:07:14,290
+in your route table you would have
+
+198
+00:07:14,290 --> 00:07:15,730
+to manage it from here.
+
+199
+00:07:15,730 --> 00:07:16,840
+So now let's look at,
+
+200
+00:07:16,840 --> 00:07:17,970
+see if it works.
+
+201
+00:07:17,970 --> 00:07:19,600
+So remember this instance does not
+
+202
+00:07:19,600 --> 00:07:20,820
+have access to the internet.
+
+203
+00:07:20,820 --> 00:07:23,260
+For example, if you go to google.com,
+
+204
+00:07:23,260 --> 00:07:24,560
+it's just does not work.
+
+205
+00:07:24,560 --> 00:07:27,690
+But let's do Amazon S3 ls,
+
+206
+00:07:27,690 --> 00:07:29,830
+and as we can see things don't work.
+
+207
+00:07:29,830 --> 00:07:31,840
+So the trick is here that because we use
+
+208
+00:07:31,840 --> 00:07:35,780
+the AWS CLI the default region of the AWS CLI
+
+209
+00:07:35,780 --> 00:07:37,740
+is US east one.
+
+210
+00:07:37,740 --> 00:07:40,620
+But, if we go back to our VPC endpoint,
+
+211
+00:07:40,620 --> 00:07:42,460
+it was provisioned for eu west one,
+
+212
+00:07:42,460 --> 00:07:45,030
+so very important thing to remember
+
+213
+00:07:45,030 --> 00:07:47,350
+is that when you do run these commands,
+
+214
+00:07:47,350 --> 00:07:49,810
+make sure you do select the region
+
+215
+00:07:49,810 --> 00:07:53,020
+that you're in too. So eu west one. And now if I do this,
+
+216
+00:07:53,020 --> 00:07:55,490
+this will talk to the Amazon S3 endpoints
+
+217
+00:07:55,490 --> 00:07:57,040
+in the region eu west one
+
+218
+00:07:57,040 --> 00:08:00,390
+and then it works, and I get the results from it.
+
+219
+00:08:00,390 --> 00:08:02,710
+So very, very important to understand that,
+
+220
+00:08:02,710 --> 00:08:04,510
+because it could be a trick question as well
+
+221
+00:08:04,510 --> 00:08:05,343
+at the exam.
+
+222
+00:08:05,343 --> 00:08:06,176
+So that's it.
+
+223
+00:08:06,176 --> 00:08:08,510
+As we can see, our private instance
+
+224
+00:08:08,510 --> 00:08:12,410
+does have access to S3 in the region eu west one,
+
+225
+00:08:12,410 --> 00:08:14,160
+and still cannot access google.com.
+
+226
+00:08:14,160 --> 00:08:16,780
+So it could be a way to make your private subnets
+
+227
+00:08:16,780 --> 00:08:20,910
+and give them access to some sort of AWS services
+
+228
+00:08:20,910 --> 00:08:23,850
+without giving them full access to the internet.
+
+229
+00:08:23,850 --> 00:08:25,030
+So that's it for this lecture.
+
+230
+00:08:25,030 --> 00:08:26,160
+I hope you've enjoyed it,
+
+231
+00:08:26,160 --> 00:08:27,910
+and I will see you in the next one.
+
