@@ -1,0 +1,420 @@
+1
+00:00:00,180 --> 00:00:01,013
+<v Instructor>Now let's go ahead</v>
+
+2
+00:00:01,013 --> 00:00:02,070
+and create our own VPC.
+
+3
+00:00:02,070 --> 00:00:04,760
+So VPC stands for Virtual Private Cloud
+
+4
+00:00:04,760 --> 00:00:07,120
+and you can have multiple VPC in a region,
+
+5
+00:00:07,120 --> 00:00:08,710
+up to five of maximum.
+
+6
+00:00:08,710 --> 00:00:09,730
+But there's a soft limit,
+
+7
+00:00:09,730 --> 00:00:12,220
+so you can place an AWS support ticket
+
+8
+00:00:12,220 --> 00:00:14,250
+and then they will increase that limit for you.
+
+9
+00:00:14,250 --> 00:00:17,320
+And each VPC can have up to five CIDR.
+
+10
+00:00:17,320 --> 00:00:20,260
+For each CIDR, the minimum size must be slash 28,
+
+11
+00:00:20,260 --> 00:00:22,420
+so 16 IP addresses,
+
+12
+00:00:22,420 --> 00:00:24,890
+and the maximum size is slash 16,
+
+13
+00:00:24,890 --> 00:00:28,760
+so 65,536 IP addresses.
+
+14
+00:00:28,760 --> 00:00:30,330
+Because VPC is private,
+
+15
+00:00:30,330 --> 00:00:32,410
+only the private IP ranges are allowed.
+
+16
+00:00:32,410 --> 00:00:33,890
+So just as a reminder,
+
+17
+00:00:33,890 --> 00:00:36,870
+we get this range, 10.0.0.0/8,
+
+18
+00:00:36,870 --> 00:00:41,830
+we get this range, 172.16.0.0/12,
+
+19
+00:00:41,830 --> 00:00:44,390
+and then finally, the home network IP address,
+
+20
+00:00:44,390 --> 00:00:48,000
+so 192.168.0.0/16.
+
+21
+00:00:48,000 --> 00:00:49,610
+And the really interesting thing is
+
+22
+00:00:49,610 --> 00:00:51,620
+that when you do create A VPC,
+
+23
+00:00:51,620 --> 00:00:53,840
+the CIDR you choose should not overlap
+
+24
+00:00:53,840 --> 00:00:54,880
+with your other networks.
+
+25
+00:00:54,880 --> 00:00:57,070
+For example, if you have a corporate network,
+
+26
+00:00:57,070 --> 00:00:59,130
+and you're on 172 dot something,
+
+27
+00:00:59,130 --> 00:01:01,380
+then make sure when you create a new VPC,
+
+28
+00:01:01,380 --> 00:01:03,660
+that there is no overlapping IP ranges
+
+29
+00:01:03,660 --> 00:01:06,180
+because when you start connecting all of those together,
+
+30
+00:01:06,180 --> 00:01:07,013
+you wanna make sure
+
+31
+00:01:07,013 --> 00:01:09,000
+that the IPs are not going to be overlapping.
+
+32
+00:01:09,000 --> 00:01:10,430
+So there's enough IPs in this world
+
+33
+00:01:10,430 --> 00:01:12,230
+for you to choose non-overlapping CIDR,
+
+34
+00:01:12,230 --> 00:01:13,930
+just be very careful with it.
+
+35
+00:01:13,930 --> 00:01:16,280
+So if we look at the state of the Hands On,
+
+36
+00:01:16,280 --> 00:01:17,770
+this is what we'll have at the end.
+
+37
+00:01:17,770 --> 00:01:21,450
+Within the AWS cloud, we will have a VPC with nothing in it.
+
+38
+00:01:21,450 --> 00:01:23,140
+So lets' get started.
+
+39
+00:01:23,140 --> 00:01:25,570
+So the really easy way to get started with a VPC would be
+
+40
+00:01:25,570 --> 00:01:26,820
+to Launch VPC Wizard,
+
+41
+00:01:26,820 --> 00:01:28,800
+but then that would defeat the whole point of learning,
+
+42
+00:01:28,800 --> 00:01:31,110
+so we are going to create a VPC manually
+
+43
+00:01:31,110 --> 00:01:31,943
+without the wizard
+
+44
+00:01:31,943 --> 00:01:33,500
+and it's actually going to be better.
+
+45
+00:01:33,500 --> 00:01:34,637
+So we'll create a VPC
+
+46
+00:01:34,637 --> 00:01:39,270
+and for this, we'll go into Your VPCs, and Create VPC.
+
+47
+00:01:39,270 --> 00:01:42,330
+The nametag will be DemoVPC.
+
+48
+00:01:42,330 --> 00:01:45,240
+And here we have to choose an IPv4 CIDR block.
+
+49
+00:01:45,240 --> 00:01:50,020
+So for this, we'll choose 10.0.0.0/16.
+
+50
+00:01:50,020 --> 00:01:52,610
+That's the biggest IP CIDR block we can choose.
+
+51
+00:01:52,610 --> 00:01:54,070
+If we do slash 15,
+
+52
+00:01:54,070 --> 00:01:56,490
+there will be a problem because the block sizes must be
+
+53
+00:01:56,490 --> 00:01:59,070
+between slash 16 and slash 28.
+
+54
+00:01:59,070 --> 00:02:01,250
+So slash 16 is a great idea.
+
+55
+00:02:01,250 --> 00:02:03,810
+And if we wanna know what slash 16 means,
+
+56
+00:02:03,810 --> 00:02:08,010
+we can go back to our website, CIDR to IPv4 Conversion,
+
+57
+00:02:08,010 --> 00:02:09,680
+type in the CIDR, and we see
+
+58
+00:02:09,680 --> 00:02:12,780
+that the first IP is going to be 10.0.0.0 slash 0,
+
+59
+00:02:12,780 --> 00:02:16,930
+and then the last one is going to be 10.0.255.255.
+
+60
+00:02:16,930 --> 00:02:18,510
+So that's 65,000 IPs.
+
+61
+00:02:18,510 --> 00:02:20,130
+All right, great.
+
+62
+00:02:20,130 --> 00:02:21,870
+For now, we're not going to do IPv6,
+
+63
+00:02:21,870 --> 00:02:25,220
+so we'll leave no IPv6 CIDR block off.
+
+64
+00:02:25,220 --> 00:02:27,440
+And the tendency is, basically,
+
+65
+00:02:27,440 --> 00:02:29,710
+how we launch EC2 instances within it.
+
+66
+00:02:29,710 --> 00:02:32,520
+Do we want default, which means shared hardware,
+
+67
+00:02:32,520 --> 00:02:34,040
+or dedicated hardware?
+
+68
+00:02:34,040 --> 00:02:35,650
+And this one was inherited
+
+69
+00:02:35,650 --> 00:02:37,690
+by when you create an EC2 instance.
+
+70
+00:02:37,690 --> 00:02:38,580
+So we'll select Default,
+
+71
+00:02:38,580 --> 00:02:40,020
+we don't want to have dedicated hardware,
+
+72
+00:02:40,020 --> 00:02:42,930
+otherwise, we'll pay a whole lot more money.
+
+73
+00:02:42,930 --> 00:02:43,763
+Click on Create.
+
+74
+00:02:43,763 --> 00:02:46,207
+And our VPC has been created.
+
+75
+00:02:46,207 --> 00:02:47,960
+And if we look at our VPC,
+
+76
+00:02:47,960 --> 00:02:50,700
+it looks like there's one CIDR block
+
+77
+00:02:50,700 --> 00:02:52,230
+that has been defined.
+
+78
+00:02:52,230 --> 00:02:53,980
+So the CIDR block is right here,
+
+79
+00:02:53,980 --> 00:02:55,320
+Flow Logs, there is nothing,
+
+80
+00:02:55,320 --> 00:02:56,780
+Tags, there is nothing.
+
+81
+00:02:56,780 --> 00:03:00,400
+But it looks like when we created that DemoVPC,
+
+82
+00:03:00,400 --> 00:03:02,770
+it comes with a Main Route table
+
+83
+00:03:02,770 --> 00:03:06,083
+and a Main Network ACL that have been created for us.
+
+84
+00:03:07,312 --> 00:03:08,530
+So what can we look at this.
+
+85
+00:03:08,530 --> 00:03:10,510
+Well, the one thing I want you to notice is
+
+86
+00:03:10,510 --> 00:03:13,990
+that we're not limited to just this IPv4 CIDR block.
+
+87
+00:03:13,990 --> 00:03:18,270
+If you wanted to, you'd be able to edit your CIDRs,
+
+88
+00:03:18,270 --> 00:03:19,420
+by clicking on Edit CIDR.
+
+89
+00:03:19,420 --> 00:03:21,950
+And here, we're able to add IPv6 CIDR
+
+90
+00:03:21,950 --> 00:03:25,180
+if we wanted to later on or add IPv4 CIDR.
+
+91
+00:03:25,180 --> 00:03:27,480
+So if you wanted to add a CIDR for IPv4,
+
+92
+00:03:27,480 --> 00:03:30,830
+you could definitely do 10.1.0.0/16,
+
+93
+00:03:30,830 --> 00:03:32,920
+which is the next CIDR,
+
+94
+00:03:32,920 --> 00:03:34,900
+and then you click on Yes,
+
+95
+00:03:34,900 --> 00:03:36,390
+and it automatically would associate that.
+
+96
+00:03:36,390 --> 00:03:40,580
+So you can add up to five VPC IPv4 CIDR in there
+
+97
+00:03:40,580 --> 00:03:43,380
+to extend your VPC size over time.
+
+98
+00:03:43,380 --> 00:03:44,863
+For now, I don't need to add this one,
+
+99
+00:03:44,863 --> 00:03:45,960
+so I'll just remove it,
+
+100
+00:03:45,960 --> 00:03:48,240
+but I just wanted to show you how this were to work
+
+101
+00:03:48,240 --> 00:03:50,863
+if you wanted to add more CIDRs to your VPC.
+
+102
+00:03:51,920 --> 00:03:53,980
+So that's it, right now, we just have a VPC,
+
+103
+00:03:53,980 --> 00:03:55,600
+it's basically a big container.
+
+104
+00:03:55,600 --> 00:03:57,390
+We haven't defined any subnets, but guess what?
+
+105
+00:03:57,390 --> 00:03:59,090
+We'll do that in the next lecture.
+
