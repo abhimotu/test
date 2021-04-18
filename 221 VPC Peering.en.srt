@@ -1,0 +1,592 @@
+1
+00:00:00,110 --> 00:00:01,629
+<v ->So now let's talk about VPC peering.</v>
+
+2
+00:00:01,629 --> 00:00:05,610
+A VPC peering allows you to connect two VPC privately
+
+3
+00:00:05,610 --> 00:00:09,240
+directly using AWS's network and to make them
+
+4
+00:00:09,240 --> 00:00:11,940
+behave as if they were in the same network.
+
+5
+00:00:11,940 --> 00:00:15,760
+For this, you need to have non-overlapping CIDR so be
+
+6
+00:00:15,760 --> 00:00:18,480
+very careful when you create your CIDRs and your VPC.
+
+7
+00:00:18,480 --> 00:00:21,720
+Make sure they are different, make sure they don't overlap.
+
+8
+00:00:21,720 --> 00:00:25,070
+So let's take an example, we have VPC-A and VPC-B
+
+9
+00:00:25,070 --> 00:00:27,990
+and we want them to be connected. Somehow we have to create
+
+10
+00:00:27,990 --> 00:00:31,660
+a VPC peering connection between the two and then update
+
+11
+00:00:31,660 --> 00:00:33,850
+some route tables and we're done.
+
+12
+00:00:33,850 --> 00:00:36,450
+So VPC peering connection is not transitive.
+
+13
+00:00:36,450 --> 00:00:38,790
+That means that for every VPC that needs to connect
+
+14
+00:00:38,790 --> 00:00:40,870
+to another VPC, you need to establish
+
+15
+00:00:40,870 --> 00:00:42,730
+a VPC peering connection.
+
+16
+00:00:42,730 --> 00:00:44,689
+So if you have VPC-C and it needs to talk to
+
+17
+00:00:44,689 --> 00:00:48,330
+VPC-B we establish a VPC peering connection
+
+18
+00:00:48,330 --> 00:00:51,053
+between B and C, but in this case
+
+19
+00:00:51,053 --> 00:00:54,220
+A and C are not connected.
+
+20
+00:00:54,220 --> 00:00:55,890
+Because for them to be connected
+
+21
+00:00:55,890 --> 00:01:00,300
+we need to create a special, dedicated VPC peering
+
+22
+00:01:00,300 --> 00:01:02,130
+connection between A and C.
+
+23
+00:01:02,130 --> 00:01:04,710
+And it's super important for you to understand this.
+
+24
+00:01:04,710 --> 00:01:06,443
+It's not transitive, okay?
+
+25
+00:01:07,480 --> 00:01:10,770
+So we can do VPC peering with another AWS account if we
+
+26
+00:01:10,770 --> 00:01:13,610
+wanted to. And when we do VPC peering,
+
+27
+00:01:13,610 --> 00:01:17,310
+super important for each VPC subset we want to peer,
+
+28
+00:01:17,310 --> 00:01:19,760
+we need to change the route table.
+
+29
+00:01:19,760 --> 00:01:22,620
+Otherwise, the instances will not be able to communicate.
+
+30
+00:01:22,620 --> 00:01:26,080
+So the transitiveness and the updating route tables part
+
+31
+00:01:26,080 --> 00:01:28,970
+are very tricky exam questions that they ask all the time.
+
+32
+00:01:28,970 --> 00:01:31,610
+So be very wary of this, we'll see these on the hands on.
+
+33
+00:01:31,610 --> 00:01:32,650
+Obviously.
+
+34
+00:01:32,650 --> 00:01:34,920
+A few elements that are good to know for VPC Peering
+
+35
+00:01:34,920 --> 00:01:37,680
+the first one is that it works inter-region, cross-accounts
+
+36
+00:01:37,680 --> 00:01:40,550
+so you can peer across region and across accounts
+
+37
+00:01:40,550 --> 00:01:42,970
+and you can also reference a security group
+
+38
+00:01:42,970 --> 00:01:45,010
+of a Peer VPC cross-accounts
+
+39
+00:01:45,010 --> 00:01:47,190
+so this is really good for your security.
+
+40
+00:01:47,190 --> 00:01:49,330
+So for example if you have a security group and
+
+41
+00:01:49,330 --> 00:01:52,730
+these are the rules for example, it allows HTTP on port 80
+
+42
+00:01:52,730 --> 00:01:55,887
+from security group in your account maybe in another VPC
+
+43
+00:01:55,887 --> 00:01:58,353
+or if it's another account entirely you have
+
+44
+00:01:58,353 --> 00:02:01,600
+a HTTP rule on port 80 and it references the security group
+
+45
+00:02:01,600 --> 00:02:05,460
+slash the account number that the security group accounts
+
+46
+00:02:05,460 --> 00:02:07,860
+the belongs to. So it's really really good because you can
+
+47
+00:02:07,860 --> 00:02:10,630
+really enhance your security group and make sure that only
+
+48
+00:02:10,630 --> 00:02:13,170
+other security groups in peer VPC have access
+
+49
+00:02:13,170 --> 00:02:17,110
+to your application. So this is where we are
+
+50
+00:02:17,110 --> 00:02:20,463
+in our hands on so far we have just seen network
+
+51
+00:02:20,463 --> 00:02:23,970
+access control list on the left hand side we're
+
+52
+00:02:23,970 --> 00:02:27,410
+going to add VPC Peering to default VPC and
+
+53
+00:02:27,410 --> 00:02:29,460
+we'll start to complete the diagram a little bit more.
+
+54
+00:02:29,460 --> 00:02:32,140
+So let's get started. So what I would like you to do here
+
+55
+00:02:32,140 --> 00:02:35,630
+is to connect my default VPC to my demo VPC.
+
+56
+00:02:35,630 --> 00:02:38,460
+So if you go to our VPC and we remove the filter
+
+57
+00:02:38,460 --> 00:02:41,700
+we have this two VPC and they have non-overlapping CIDER
+
+58
+00:02:41,700 --> 00:02:44,090
+and would like them to be able to communicate.
+
+59
+00:02:44,090 --> 00:02:46,740
+So first let's prove that they can't communicate.
+
+60
+00:02:46,740 --> 00:02:48,470
+For this I'm going to create an instance,
+
+61
+00:02:48,470 --> 00:02:52,450
+I'm going to launch an instance then next T2 micro.
+
+62
+00:02:52,450 --> 00:02:54,170
+I'll configure the instance detail and
+
+63
+00:02:54,170 --> 00:02:56,287
+this time I will launch it in my default VPC.
+
+64
+00:02:56,287 --> 00:03:00,070
+I don't care about this subnet it doesn't matter and
+
+65
+00:03:00,070 --> 00:03:02,460
+I'm fine I'll add storage I'll add tags configure
+
+66
+00:03:02,460 --> 00:03:05,770
+security group and I will just have port 22,
+
+67
+00:03:05,770 --> 00:03:08,370
+this is fine. Review and Launch, launch and
+
+68
+00:03:08,370 --> 00:03:10,600
+I will launch this session to it directly.
+
+69
+00:03:10,600 --> 00:03:13,250
+So now let me wait for my instance to get started,
+
+70
+00:03:13,250 --> 00:03:15,700
+I will get the IP address and get association to it
+
+71
+00:03:15,700 --> 00:03:19,680
+My EC2 instance now running all codes default EC2
+
+72
+00:03:19,680 --> 00:03:23,650
+just to know that it's in the default VPC and so here's
+
+73
+00:03:23,650 --> 00:03:26,718
+the IP address the public one so I'm going to go and
+
+74
+00:03:26,718 --> 00:03:29,910
+type in SSH into this instance so on the left hand side
+
+75
+00:03:29,910 --> 00:03:34,170
+I will SSH into the instance that is in my created VPC
+
+76
+00:03:34,170 --> 00:03:36,480
+in the public subnet and on the right hand side,
+
+77
+00:03:36,480 --> 00:03:40,010
+I ssh into the instance in the default VPC.
+
+78
+00:03:40,010 --> 00:03:42,540
+So let's just see if the works. That worked,
+
+79
+00:03:42,540 --> 00:03:45,510
+okay here we go. So we can look at the IP this one is
+
+80
+00:03:45,510 --> 00:03:47,900
+the IP 10-0-0-108
+
+81
+00:03:47,900 --> 00:03:49,710
+where else this one is the
+
+82
+00:03:49,710 --> 00:03:53,550
+IP 172-31-26-26
+
+83
+00:03:53,550 --> 00:03:57,350
+This one if we curl local host port 80
+
+84
+00:03:57,350 --> 00:03:59,200
+we should see hello world because
+
+85
+00:03:59,200 --> 00:04:01,820
+there is a hello world webpage. So the idea is
+
+86
+00:04:01,820 --> 00:04:04,270
+that we want to be able to do the exact same thing
+
+87
+00:04:04,270 --> 00:04:09,270
+but from this instance. So if we curl 10 0 0 108
+
+88
+00:04:09,500 --> 00:04:11,520
+Port 80
+
+89
+00:04:11,520 --> 00:04:13,970
+we wanna hello world, but right now we don't see
+
+90
+00:04:13,970 --> 00:04:18,046
+hello world because we can't access this network
+
+91
+00:04:18,046 --> 00:04:21,800
+from this network. So we need to peer our VPC
+
+92
+00:04:21,800 --> 00:04:23,640
+to access each other's network. Now that we see
+
+93
+00:04:23,640 --> 00:04:26,010
+the problem, Let's look at the solution.
+
+94
+00:04:26,010 --> 00:04:28,520
+We go to VPCs and on the bottom left there
+
+95
+00:04:28,520 --> 00:04:31,681
+is a peering connection. So we create a peering connection,
+
+96
+00:04:31,681 --> 00:04:35,980
+we call it DemoPeering and then we have to set up a VPC
+
+97
+00:04:35,980 --> 00:04:39,948
+requester so that is the VPC you own so DemoVPC and
+
+98
+00:04:39,948 --> 00:04:43,150
+then you select another VPC to peer with it could be in my
+
+99
+00:04:43,150 --> 00:04:45,700
+account or another account, it could be in this region or
+
+100
+00:04:45,700 --> 00:04:48,570
+another regions you get lots of flexibility here.
+
+101
+00:04:48,570 --> 00:04:50,627
+So select one for my account for this region and
+
+102
+00:04:50,627 --> 00:04:54,500
+the accepter VPC is going to be my default VPC.
+
+103
+00:04:54,500 --> 00:04:57,150
+So it looks like, yes the CIDR is right here they
+
+104
+00:04:57,150 --> 00:05:00,320
+do not overlap. So I create the peering connection
+
+105
+00:05:00,320 --> 00:05:03,260
+and the peering connection will only work when it
+
+106
+00:05:03,260 --> 00:05:07,640
+gets accepted so right now this is pending acceptance.
+
+107
+00:05:07,640 --> 00:05:10,859
+So we have to accept it and so for this I right click
+
+108
+00:05:10,859 --> 00:05:14,570
+and I will accept the request. So this looks fine
+
+109
+00:05:14,570 --> 00:05:17,470
+I will accept this request that peers this VPC from
+
+110
+00:05:17,470 --> 00:05:20,530
+this account to this VPC in this account. Yes I accept.
+
+111
+00:05:20,530 --> 00:05:24,350
+Okay, it says your VPC connection has been established but
+
+112
+00:05:24,350 --> 00:05:28,440
+to receive traffic across this VPC peering connection,
+
+113
+00:05:28,440 --> 00:05:31,500
+you must add a route to the peered VPC, so yes.
+
+114
+00:05:31,500 --> 00:05:35,330
+Let's have a look now if I do my curl it still
+
+115
+00:05:35,330 --> 00:05:37,010
+doesn't work because we're missing the routes.
+
+116
+00:05:37,010 --> 00:05:41,040
+Okay, let's get back to it. Now I'm going to my route
+
+117
+00:05:41,040 --> 00:05:43,590
+table and so we basically have to update my
+
+118
+00:05:43,590 --> 00:05:47,377
+public route table and my default VPC route tables.
+
+119
+00:05:48,591 --> 00:05:51,612
+Let's go update the public route table first.
+
+120
+00:05:51,612 --> 00:05:53,883
+There is my demoVPC, so here's the route and
+
+121
+00:05:53,883 --> 00:05:57,888
+I'll say okay I will edit it and I will say for
+
+122
+00:05:57,888 --> 00:06:00,633
+this CIDER and I need to find the CIDER so let's have a look
+
+123
+00:06:00,633 --> 00:06:03,996
+at what the other default CIDER is. This is the default
+
+124
+00:06:03,996 --> 00:06:06,657
+CIDER from my default VPCs so let's go back to route table.
+
+125
+00:06:06,657 --> 00:06:10,970
+I'll say okay for route I'll edit it, I'll add one and
+
+126
+00:06:10,970 --> 00:06:14,490
+I'll say for all traffic that goes to this kind of CIDER,
+
+127
+00:06:14,490 --> 00:06:18,850
+and the target is going to be my peering connection
+
+128
+00:06:18,850 --> 00:06:22,529
+and it makes sense now. We are saying okay if we start to
+
+129
+00:06:22,529 --> 00:06:26,700
+hit that IP then you use this VPC peering connection, save
+
+130
+00:06:26,700 --> 00:06:30,600
+routes. And it's not in enough to do it in one route table,
+
+131
+00:06:30,600 --> 00:06:33,390
+you need to do it in the other route tables, so we've done
+
+132
+00:06:33,390 --> 00:06:36,240
+it on the demo VPC side but we have to do it in the default
+
+133
+00:06:36,240 --> 00:06:40,240
+VPC side. So here's the route and I'll say, this time when
+
+134
+00:06:40,240 --> 00:06:45,240
+the destination is 10 0 0 0/16 which is basically my demo
+
+135
+00:06:46,130 --> 00:06:50,400
+VPC that we created in this exception then the target is
+
+136
+00:06:50,400 --> 00:06:53,360
+going to be peering connection and save route as well.
+
+137
+00:06:53,360 --> 00:06:58,130
+So now basically, we have route going both ways from a
+
+138
+00:06:58,130 --> 00:07:02,000
+public to my default and from my default to my public
+
+139
+00:07:02,000 --> 00:07:04,830
+and so this should be good enough to have the instances
+
+140
+00:07:04,830 --> 00:07:07,810
+being connected but let's try it out. We are going to curl
+
+141
+00:07:07,810 --> 00:07:11,330
+this URL press enter and we get hello world as a response
+
+142
+00:07:11,330 --> 00:07:14,880
+so now my instances in my default VPC are connected and
+
+143
+00:07:14,880 --> 00:07:19,410
+peered to my instances in my demo VPC. So pretty awesome
+
+144
+00:07:19,410 --> 00:07:22,440
+right? We just connected the two, it was really easy but
+
+145
+00:07:22,440 --> 00:07:24,530
+what we need to see is that we need to create a peering
+
+146
+00:07:24,530 --> 00:07:28,780
+connection and accept it and then update the route tables.
+
+147
+00:07:28,780 --> 00:07:30,590
+Okay that's it for this lecture
+
+148
+00:07:30,590 --> 00:07:32,140
+I will see you in the next one.
+
