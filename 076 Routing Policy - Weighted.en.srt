@@ -1,0 +1,412 @@
+1
+00:00:00,230 --> 00:00:01,820
+<v Instructor>So now a more interesting routing</v>
+
+2
+00:00:01,820 --> 00:00:03,770
+policy is called Weighted.
+
+3
+00:00:03,770 --> 00:00:05,830
+And Weighted controls the percentage of the requests
+
+4
+00:00:05,830 --> 00:00:08,000
+that will go to specific endpoints.
+
+5
+00:00:08,000 --> 00:00:09,630
+To be concrete and visual,
+
+6
+00:00:09,630 --> 00:00:12,730
+we have Route 53, and we're going to assign
+
+7
+00:00:12,730 --> 00:00:13,700
+different IP addresses,
+
+8
+00:00:13,700 --> 00:00:15,640
+maybe linked to each of two instances,
+
+9
+00:00:15,640 --> 00:00:17,140
+and we're going to assign weight;
+
+10
+00:00:17,140 --> 00:00:19,460
+so 70, 20, and 10.
+
+11
+00:00:19,460 --> 00:00:21,810
+By the way, the sum does not have to be 100,
+
+12
+00:00:21,810 --> 00:00:23,580
+it's just me who chooses easy number.
+
+13
+00:00:23,580 --> 00:00:25,930
+But whatever weight you put, whatever the sum is,
+
+14
+00:00:25,930 --> 00:00:27,330
+you'll just do the average and figure out
+
+15
+00:00:27,330 --> 00:00:28,770
+a percentage from it.
+
+16
+00:00:28,770 --> 00:00:31,040
+So what we mean from this weight is that now
+
+17
+00:00:31,040 --> 00:00:35,140
+Route 53 will send 70% of the answers
+
+18
+00:00:35,140 --> 00:00:38,020
+to be back from this EC2 instance,
+
+19
+00:00:38,020 --> 00:00:39,880
+well, they will send 20% of the answer
+
+20
+00:00:39,880 --> 00:00:41,070
+back from the second one and
+
+21
+00:00:41,070 --> 00:00:44,070
+10% of the answer back to the third one.
+
+22
+00:00:44,070 --> 00:00:47,220
+What this means if that now our clients will send 70%
+
+23
+00:00:47,220 --> 00:00:49,140
+of the traffic to the first instance,
+
+24
+00:00:49,140 --> 00:00:50,970
+20% of the traffic to the second instance
+
+25
+00:00:50,970 --> 00:00:54,570
+and 10% of the traffic to the last instance.
+
+26
+00:00:54,570 --> 00:00:55,780
+So that's really helpful to start,
+
+27
+00:00:55,780 --> 00:00:59,150
+basically, assigning different weights to different parts,
+
+28
+00:00:59,150 --> 00:01:00,180
+so what we do to do this,
+
+29
+00:01:00,180 --> 00:01:03,040
+well, for example, to deploy a new application version
+
+30
+00:01:03,040 --> 00:01:05,830
+and you wanted to test only 1% of the traffic
+
+31
+00:01:05,830 --> 00:01:07,920
+on this new app version for example
+
+32
+00:01:07,920 --> 00:01:10,450
+then that's a nice way to do it with Route 53,
+
+33
+00:01:10,450 --> 00:01:13,240
+where it's helpful to split traffic between two regions
+
+34
+00:01:13,240 --> 00:01:15,840
+and this is super quick because you can also associate this
+
+35
+00:01:15,840 --> 00:01:17,800
+with health checks, so if one EC2 instance
+
+36
+00:01:17,800 --> 00:01:21,220
+is not working properly, no traffic will be sent to it.
+
+37
+00:01:21,220 --> 00:01:23,250
+So let's have a look at how this works in the console.
+
+38
+00:01:23,250 --> 00:01:25,020
+I'm going to create a new record set
+
+39
+00:01:25,020 --> 00:01:26,991
+and I'll call this one weighted,
+
+40
+00:01:26,991 --> 00:01:29,970
+and here I'm going to set different values,
+
+41
+00:01:29,970 --> 00:01:32,300
+so the first value I'm going to set is the one
+
+42
+00:01:32,300 --> 00:01:35,730
+from eu-west-1a which is Ireland
+
+43
+00:01:35,730 --> 00:01:39,070
+and then I'm going to say the routing policy is weighted.
+
+44
+00:01:39,070 --> 00:01:39,910
+Weighted, why?
+
+45
+00:01:39,910 --> 00:01:41,900
+Because we're going to be able to assign weights.
+
+46
+00:01:41,900 --> 00:01:44,960
+So we'll say this one is going to be 70
+
+47
+00:01:44,960 --> 00:01:48,920
+and we'll set the ID My Ireland Data Center
+
+48
+00:01:48,920 --> 00:01:51,050
+but you could set this to an arbitrarily number,
+
+49
+00:01:51,050 --> 00:01:52,510
+for example, 700.
+
+50
+00:01:52,510 --> 00:01:55,080
+So 70 is fine and here you could associate
+
+51
+00:01:55,080 --> 00:01:57,260
+with a health check, but for now we'll leave it as no.
+
+52
+00:01:57,260 --> 00:01:59,320
+Alright, we've created a weight,
+
+53
+00:01:59,320 --> 00:02:01,380
+but now thee cool thing is that we can recreate
+
+54
+00:02:01,380 --> 00:02:05,160
+another record set on the same name,
+
+55
+00:02:05,160 --> 00:02:07,730
+so weighted, that defines your dot com.
+
+56
+00:02:07,730 --> 00:02:10,170
+But now the value is going to be something else.
+
+57
+00:02:10,170 --> 00:02:14,030
+Maybe us-east-1 and I'll just paste this here
+
+58
+00:02:14,030 --> 00:02:15,240
+and here we go.
+
+59
+00:02:15,240 --> 00:02:18,770
+Now again, I will say that the routing policy is weighted,
+
+60
+00:02:18,770 --> 00:02:20,963
+and this time the weight is going to be 20,
+
+61
+00:02:21,830 --> 00:02:24,850
+and the ID is going to be US,
+
+62
+00:02:24,850 --> 00:02:26,430
+whatever you want to set really.
+
+63
+00:02:26,430 --> 00:02:27,480
+Click on create.
+
+64
+00:02:27,480 --> 00:02:29,540
+And so the cool thing we see now in the bottom
+
+65
+00:02:29,540 --> 00:02:32,640
+is that our two records, right here, are added
+
+66
+00:02:32,640 --> 00:02:34,710
+in two different rows and they basically
+
+67
+00:02:34,710 --> 00:02:37,370
+point to different values and at the right hand side
+
+68
+00:02:37,370 --> 00:02:39,800
+we can see the weight as a column right here.
+
+69
+00:02:39,800 --> 00:02:41,250
+And at the top right hand side,
+
+70
+00:02:41,250 --> 00:02:44,980
+we can see the ID we set to these records.
+
+71
+00:02:44,980 --> 00:02:47,820
+So finally, we can set another weight record,
+
+72
+00:02:47,820 --> 00:02:50,300
+so I'll say weighted, and the value
+
+73
+00:02:50,300 --> 00:02:53,660
+is going to be my Tokyo instance,
+
+74
+00:02:53,660 --> 00:02:57,770
+so I'll copy this IP and paste the value in, excellent.
+
+75
+00:02:57,770 --> 00:02:59,490
+And the routing policy is weighted
+
+76
+00:02:59,490 --> 00:03:01,206
+and the weight is going to be 10
+
+77
+00:03:01,206 --> 00:03:03,870
+and I'll call it Tokyo, excellent.
+
+78
+00:03:03,870 --> 00:03:05,210
+Click on create.
+
+79
+00:03:05,210 --> 00:03:09,250
+And now what we get out of it is three different records
+
+80
+00:03:09,250 --> 00:03:12,790
+in here that point to three different instances.
+
+81
+00:03:12,790 --> 00:03:16,120
+So now, I know you're dying to do it, let's try this URL.
+
+82
+00:03:16,120 --> 00:03:19,870
+So let's try it weighted.stephanetheteacher.com
+
+83
+00:03:19,870 --> 00:03:23,680
+and here we get an answer from us-east-1a.
+
+84
+00:03:23,680 --> 00:03:26,470
+And so if I refresh I'm always going to be redirected
+
+85
+00:03:26,470 --> 00:03:28,080
+to us-east-1a.
+
+86
+00:03:28,080 --> 00:03:31,520
+But when the TTL is gone, so when 300 seconds pass,
+
+87
+00:03:31,520 --> 00:03:32,550
+I did not change it to TTL,
+
+88
+00:03:32,550 --> 00:03:34,270
+so it's going to be longer to wait,
+
+89
+00:03:34,270 --> 00:03:36,870
+I will resolve to a new IP.
+
+90
+00:03:36,870 --> 00:03:38,800
+And the idea is that thanks to the weight,
+
+91
+00:03:38,800 --> 00:03:42,420
+I have 70% chance of landing on Ireland,
+
+92
+00:03:42,420 --> 00:03:44,480
+10% change of landing on Tokyo and
+
+93
+00:03:44,480 --> 00:03:47,320
+20% chance of landing in the US.
+
+94
+00:03:47,320 --> 00:03:49,950
+You could also take this DNS name
+
+95
+00:03:49,950 --> 00:03:53,590
+and use dig to query it and see what you get back.
+
+96
+00:03:53,590 --> 00:03:55,810
+In this case, basically what we're going to get back
+
+97
+00:03:55,810 --> 00:03:59,010
+from it is only one IP, so we're not aware that
+
+98
+00:03:59,010 --> 00:04:01,890
+there is any weight applied, we'll just get back one IP.
+
+99
+00:04:01,890 --> 00:04:04,010
+And this IP, remember, is from Ireland.
+
+100
+00:04:04,010 --> 00:04:06,850
+And so the idea here is that the Route 53
+
+101
+00:04:06,850 --> 00:04:10,210
+will serve the answers based on the weights,
+
+102
+00:04:10,210 --> 00:04:12,010
+and so from a client's side perspective,
+
+103
+00:04:12,010 --> 00:04:15,433
+we're not aware that there are multiple IPs in the backend.
+
