@@ -1,0 +1,196 @@
+1
+00:00:00,000 --> 00:00:01,800
+<v Instructor>So, let's talk about Bastion Hosts.</v>
+
+2
+00:00:01,800 --> 00:00:02,880
+So, this is the diagram.
+
+3
+00:00:02,880 --> 00:00:04,370
+We have our Bastion Host users,
+
+4
+00:00:04,370 --> 00:00:06,550
+we SSH into the Bastion Host,
+
+5
+00:00:06,550 --> 00:00:08,080
+which is in a public subnet
+
+6
+00:00:08,080 --> 00:00:10,040
+and then from the Bastion Host,
+
+7
+00:00:10,040 --> 00:00:13,420
+we're able to SSH into other Linux instances.
+
+8
+00:00:13,420 --> 00:00:15,360
+So, the Bastion Host is used
+
+9
+00:00:15,360 --> 00:00:17,690
+to SSH into private instances
+
+10
+00:00:17,690 --> 00:00:19,570
+and it sits in the public subnet.
+
+11
+00:00:19,570 --> 00:00:20,510
+And the reason we do this is
+
+12
+00:00:20,510 --> 00:00:22,590
+that because the public subnet is connected
+
+13
+00:00:22,590 --> 00:00:24,810
+to all the other private subnets.
+
+14
+00:00:24,810 --> 00:00:26,190
+So what we need to do is make sure
+
+15
+00:00:26,190 --> 00:00:28,470
+that the security group of the Bastion Host
+
+16
+00:00:28,470 --> 00:00:32,340
+is super strict to only allow the IPs that need to go in.
+
+17
+00:00:32,340 --> 00:00:33,180
+So, as an Exam Tip,
+
+18
+00:00:33,180 --> 00:00:34,700
+you'll get this as the exam,
+
+19
+00:00:34,700 --> 00:00:35,780
+make sure the Bastion Host
+
+20
+00:00:35,780 --> 00:00:38,430
+only has port 22 traffic coming from the IP you need,
+
+21
+00:00:38,430 --> 00:00:39,590
+so your own IP,
+
+22
+00:00:39,590 --> 00:00:42,260
+and not from other security groups from other instances.
+
+23
+00:00:42,260 --> 00:00:44,650
+The only thing the Bastion Host needs
+
+24
+00:00:44,650 --> 00:00:47,560
+is port 22 coming from your IP.
+
+25
+00:00:47,560 --> 00:00:49,510
+So, let's have a quick hands on on this.
+
+26
+00:00:49,510 --> 00:00:51,870
+So, it turns out that we've already used Bastion Host
+
+27
+00:00:51,870 --> 00:00:53,430
+without really knowing about it,
+
+28
+00:00:53,430 --> 00:00:55,320
+but when we have a public instance,
+
+29
+00:00:55,320 --> 00:00:58,180
+well, that public instance is also a Bastion Host.
+
+30
+00:00:58,180 --> 00:01:01,670
+Why, because we did allow SSH access into it,
+
+31
+00:01:01,670 --> 00:01:03,380
+so we allowed SSH
+
+32
+00:01:03,380 --> 00:01:05,790
+and it sits in the public subnet so we can access it,
+
+33
+00:01:05,790 --> 00:01:07,730
+and from this Bastion Host,
+
+34
+00:01:07,730 --> 00:01:10,730
+weave SSH into our private instance.
+
+35
+00:01:10,730 --> 00:01:12,560
+So, let's have a look at how this works.
+
+36
+00:01:12,560 --> 00:01:14,170
+So, let's go back.
+
+37
+00:01:14,170 --> 00:01:16,860
+So, let's SSH into our public instance,
+
+38
+00:01:16,860 --> 00:01:17,900
+our Bastion Host,
+
+39
+00:01:17,900 --> 00:01:20,500
+and from there we ran the SSH command
+
+40
+00:01:20,500 --> 00:01:23,830
+to SSH into our private instance.
+
+41
+00:01:23,830 --> 00:01:24,990
+Now, this is not perfect
+
+42
+00:01:24,990 --> 00:01:27,920
+and there are ways not to use the private key pair
+
+43
+00:01:27,920 --> 00:01:29,780
+onto the Bastion Host directly,
+
+44
+00:01:29,780 --> 00:01:31,500
+to pass it more as a proxy.
+
+45
+00:01:31,500 --> 00:01:32,570
+There's ways to improve this,
+
+46
+00:01:32,570 --> 00:01:34,130
+but it gives you the general idea
+
+47
+00:01:34,130 --> 00:01:36,720
+of how a Bastion Host is used
+
+48
+00:01:36,720 --> 00:01:38,090
+and I hope that was helpful for you.
+
+49
+00:01:38,090 --> 00:01:39,840
+I will see you in the next lecture.
+

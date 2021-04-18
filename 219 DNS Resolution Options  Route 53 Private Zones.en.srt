@@ -1,0 +1,400 @@
+1
+00:00:00,000 --> 00:00:02,118
+<v Narrator>Let's quickly talk about DNS resolution</v>
+
+2
+00:00:02,118 --> 00:00:03,318
+in a VPC.
+
+3
+00:00:03,318 --> 00:00:04,532
+There are two very important settings
+
+4
+00:00:04,532 --> 00:00:06,498
+and the exam may ask you about them.
+
+5
+00:00:06,498 --> 00:00:08,852
+The first one is enableDnsSupport
+
+6
+00:00:08,852 --> 00:00:11,680
+and that is a DNS resolution setting.
+
+7
+00:00:11,680 --> 00:00:13,450
+The default is True.
+
+8
+00:00:13,450 --> 00:00:15,632
+It helps decide if the DNS resolution
+
+9
+00:00:15,632 --> 00:00:17,626
+is supported for the VPC.
+
+10
+00:00:17,626 --> 00:00:20,769
+That means that if it's true there is an AWS DNS server
+
+11
+00:00:20,769 --> 00:00:23,342
+that will be queried automatically as a primary DNS
+
+12
+00:00:23,342 --> 00:00:25,259
+that's 169.254.169.253.
+
+13
+00:00:27,296 --> 00:00:30,318
+There's second setting called enableDnsHostname which is
+
+14
+00:00:30,318 --> 00:00:32,950
+a DNS hostname setting as well seen in the hands on.
+
+15
+00:00:32,950 --> 00:00:36,572
+By default it's false when you create a new VPC like we did.
+
+16
+00:00:36,572 --> 00:00:39,746
+It's true by default when you create a default DBC.
+
+17
+00:00:39,746 --> 00:00:41,628
+So when it's comes with your accounts
+
+18
+00:00:41,628 --> 00:00:43,592
+or if you use the VPC wizard.
+
+19
+00:00:43,592 --> 00:00:45,272
+It won't do anything, this setting,
+
+20
+00:00:45,272 --> 00:00:48,857
+unless you also have enableDnsSupport=true.
+
+21
+00:00:48,857 --> 00:00:52,038
+If it's true as well then it will assign public hostname
+
+22
+00:00:52,038 --> 00:00:53,838
+to EC2 instances.
+
+23
+00:00:53,838 --> 00:00:55,690
+If it has a public IP.
+
+24
+00:00:55,690 --> 00:00:58,359
+If you use a custom DNS domain the trick is,
+
+25
+00:00:58,359 --> 00:01:01,509
+if you have a private zone in Route 53 then you
+
+26
+00:01:01,509 --> 00:01:06,032
+must set both these attributes to true for your instances
+
+27
+00:01:06,032 --> 00:01:08,140
+to resolve that private zone.
+
+28
+00:01:08,140 --> 00:01:09,182
+Let's have a look at this setting
+
+29
+00:01:09,182 --> 00:01:11,057
+and their impact right now.
+
+30
+00:01:11,057 --> 00:01:13,119
+Let's go to our VPC.
+
+31
+00:01:13,119 --> 00:01:15,782
+We have our demo VPC right here available.
+
+32
+00:01:15,782 --> 00:01:19,196
+If you right-click and we edit DNS resolution we
+
+33
+00:01:19,196 --> 00:01:21,708
+can see that this setting is by default enable.
+
+34
+00:01:21,708 --> 00:01:25,510
+This will basically resolve the AWS DNS for us.
+
+35
+00:01:25,510 --> 00:01:27,078
+This is great.
+
+36
+00:01:27,078 --> 00:01:32,078
+If I look at the DNS hostname, by default it is disabled.
+
+37
+00:01:32,148 --> 00:01:33,296
+What happens when we enable it?
+
+38
+00:01:33,296 --> 00:01:34,188
+I'll show you in a second.
+
+39
+00:01:34,188 --> 00:01:36,566
+First let's go to EC2.
+
+40
+00:01:36,566 --> 00:01:38,906
+If we look at our public instance that was created
+
+41
+00:01:38,906 --> 00:01:42,582
+in our public Subnet, it does have an IPv4 public IP.
+
+42
+00:01:42,582 --> 00:01:45,080
+It does not have a public DNS.
+
+43
+00:01:45,080 --> 00:01:46,713
+This is what this setting does.
+
+44
+00:01:46,713 --> 00:01:51,153
+If we do change the setting to enable and click on save.
+
+45
+00:01:51,153 --> 00:01:53,606
+DNS hostnames have been updated.
+
+46
+00:01:53,606 --> 00:01:56,052
+Now if you go back to our EC2 management console
+
+47
+00:01:56,052 --> 00:01:57,603
+and we wait just a little bit.
+
+48
+00:01:57,603 --> 00:02:00,761
+As you can see, now my instance has a public DNS
+
+49
+00:02:00,761 --> 00:02:04,443
+that was assigned to it automatically.
+
+50
+00:02:04,443 --> 00:02:09,026
+Thanks to these things now we could go into Route 53.
+
+51
+00:02:09,026 --> 00:02:11,373
+This is where you would be able to create
+
+52
+00:02:11,373 --> 00:02:13,654
+a private hosted zone.
+
+53
+00:02:13,654 --> 00:02:16,332
+Go to hosted zones, create zone.
+
+54
+00:02:16,332 --> 00:02:18,782
+Then you would make this a private hosted zone.
+
+55
+00:02:18,782 --> 00:02:21,058
+You have the domain of whatever you want.
+
+56
+00:02:21,058 --> 00:02:23,558
+We'll just say fubar.internal.
+
+57
+00:02:25,656 --> 00:02:27,696
+It's just a random domain.
+
+58
+00:02:27,696 --> 00:02:30,113
+I'll call it internal domain.
+
+59
+00:02:31,399 --> 00:02:33,890
+Now we'll set the type as a Private Hosted Zone
+
+60
+00:02:33,890 --> 00:02:35,719
+for Amazon VPC.
+
+61
+00:02:35,719 --> 00:02:38,360
+It says, "To use private zones you must set
+
+62
+00:02:38,360 --> 00:02:40,789
+"the following Amazon VPC settings to true."
+
+63
+00:02:40,789 --> 00:02:41,906
+"Enable DNS hostname."
+
+64
+00:02:41,906 --> 00:02:43,566
+"Enable DNS support."
+
+65
+00:02:43,566 --> 00:02:46,129
+This is what we just did right here.
+
+66
+00:02:46,129 --> 00:02:48,396
+If we wanted to go with this.
+
+67
+00:02:48,396 --> 00:02:50,556
+We'll select the VPC ID we want to assign
+
+68
+00:02:50,556 --> 00:02:51,568
+this private zone to.
+
+69
+00:02:51,568 --> 00:02:54,589
+We'll select our demo VPC and click on create.
+
+70
+00:02:54,589 --> 00:02:56,442
+This will cost you $.50 if you do create
+
+71
+00:02:56,442 --> 00:02:58,760
+that zone so just be aware.
+
+72
+00:02:58,760 --> 00:03:02,218
+We created that zone fubar.internal.
+
+73
+00:03:02,218 --> 00:03:03,898
+I'm going to create a record set.
+
+74
+00:03:03,898 --> 00:03:07,065
+I'll just call it demo.fubar.internal.
+
+75
+00:03:08,666 --> 00:03:13,666
+It's going to be a CNAME that points to, say, google.com.
+
+76
+00:03:14,090 --> 00:03:15,748
+Www.google.com.
+
+77
+00:03:15,748 --> 00:03:18,846
+Just for fun, we're just creating a very simple record.
+
+78
+00:03:18,846 --> 00:03:20,256
+Click on create.
+
+79
+00:03:20,256 --> 00:03:23,930
+Now, let's see if we can resolve that DNS directly
+
+80
+00:03:23,930 --> 00:03:26,232
+from our EC2 instances.
+
+81
+00:03:26,232 --> 00:03:29,113
+Let's go to our EC2 instance.
+
+82
+00:03:29,113 --> 00:03:31,693
+Here is one and I'll do a dig.
+
+83
+00:03:31,693 --> 00:03:34,003
+On fubar.internal.
+
+84
+00:03:34,003 --> 00:03:35,571
+Here we get the answer section
+
+85
+00:03:35,571 --> 00:03:38,005
+which is google.com as a CNAME.
+
+86
+00:03:38,005 --> 00:03:39,017
+This worked.
+
+87
+00:03:39,017 --> 00:03:40,571
+Now basically thanks to these settings,
+
+88
+00:03:40,571 --> 00:03:44,238
+we can have a private hosted zone in our VPC
+
+89
+00:03:45,407 --> 00:03:47,604
+which is really cool because now we can create a bunch
+
+90
+00:03:47,604 --> 00:03:50,897
+of records for domains we don't necessarily own
+
+91
+00:03:50,897 --> 00:03:52,615
+because this is a private zone.
+
+92
+00:03:52,615 --> 00:03:54,677
+This is accessible within our VPC.
+
+93
+00:03:54,677 --> 00:03:56,747
+It is a very common exam question.
+
+94
+00:03:56,747 --> 00:03:59,289
+When you do have private Route 53 zones.
+
+95
+00:03:59,289 --> 00:04:01,121
+I think no one shows you how to do this.
+
+96
+00:04:01,121 --> 00:04:02,807
+I wanted to show you how to do this right now.
+
+97
+00:04:02,807 --> 00:04:05,853
+This is how you would create a private zone on Route 53
+
+98
+00:04:05,853 --> 00:04:08,890
+and have it resolve within your VPC.
+
+99
+00:04:08,890 --> 00:04:09,723
+That's it.
+
+100
+00:04:09,723 --> 00:04:10,905
+I will see you in the next lecture.
+

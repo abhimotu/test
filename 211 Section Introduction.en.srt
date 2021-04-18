@@ -1,0 +1,88 @@
+1
+00:00:00,340 --> 00:00:01,340
+<v Instructor>For networking also,</v>
+
+2
+00:00:01,340 --> 00:00:03,940
+we need to know in and out how to create,
+
+3
+00:00:03,940 --> 00:00:06,020
+operate and manage a VPC.
+
+4
+00:00:06,020 --> 00:00:07,810
+Troubleshooting is also very important.
+
+5
+00:00:07,810 --> 00:00:09,513
+So, we'll look at Amazon VPC
+
+6
+00:00:09,513 --> 00:00:12,060
+and AWS Direct Connect in this section.
+
+7
+00:00:12,060 --> 00:00:13,770
+Now, you may be asking me oh, I already know
+
+8
+00:00:13,770 --> 00:00:16,740
+how to do VPC and I say I hope you do
+
+9
+00:00:16,740 --> 00:00:19,510
+but trust me, for to know how to do a VPC,
+
+10
+00:00:19,510 --> 00:00:21,110
+you need to look at this diagram
+
+11
+00:00:21,110 --> 00:00:23,320
+and understand everything that goes in there.
+
+12
+00:00:23,320 --> 00:00:24,290
+So, have a good look.
+
+13
+00:00:24,290 --> 00:00:25,300
+If you know everything in there,
+
+14
+00:00:25,300 --> 00:00:26,640
+you can skip this session,
+
+15
+00:00:26,640 --> 00:00:30,010
+if not, I strongly recommend to do this section,
+
+16
+00:00:30,010 --> 00:00:32,610
+take your time, it is long, there's lots of learning
+
+17
+00:00:32,610 --> 00:00:36,290
+and we're going to visit a whole new set of concepts.
+
+18
+00:00:36,290 --> 00:00:37,940
+It takes a lot of time to learn VPC,
+
+19
+00:00:37,940 --> 00:00:39,960
+it took me a lot of time to learn VPC.
+
+20
+00:00:39,960 --> 00:00:41,550
+Don't worry, we'll go step by step
+
+21
+00:00:41,550 --> 00:00:43,900
+and understand this in our time.
+
+22
+00:00:43,900 --> 00:00:45,000
+Let's get started now.
+

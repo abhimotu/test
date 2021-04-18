@@ -1,0 +1,796 @@
+1
+00:00:00,130 --> 00:00:01,870
+<v Narrator>Okay so our subnets are created,</v>
+
+2
+00:00:01,870 --> 00:00:04,950
+so why don't we go ahead and try to create a EC2 instance.
+
+3
+00:00:04,950 --> 00:00:08,190
+So we go to EC2 and we wanna create an EC2 instance
+
+4
+00:00:08,190 --> 00:00:10,400
+maybe in one of our public subnets.
+
+5
+00:00:10,400 --> 00:00:12,250
+So we'll create one in public subnet A.
+
+6
+00:00:12,250 --> 00:00:15,880
+So I'll go to EC2 instances, launch instance
+
+7
+00:00:15,880 --> 00:00:19,550
+and here I'm going to choose the Amazon Linux AMI 2,
+
+8
+00:00:19,550 --> 00:00:21,400
+t2.micro this is great.
+
+9
+00:00:21,400 --> 00:00:23,020
+Instance details, so here we go,
+
+10
+00:00:23,020 --> 00:00:24,530
+this is where we are going to change some things.
+
+11
+00:00:24,530 --> 00:00:27,920
+So here in network we're going to choose our demo VPC
+
+12
+00:00:27,920 --> 00:00:31,690
+and then for subnet, we get to choose which subnet we want.
+
+13
+00:00:31,690 --> 00:00:34,970
+So we'll choose a PublicSubnetA eu-west-1
+
+14
+00:00:34,970 --> 00:00:37,660
+and it says there's 251 IP Adresses available
+
+15
+00:00:37,660 --> 00:00:39,030
+so that's great.
+
+16
+00:00:39,030 --> 00:00:40,980
+For auto-assign Public IP
+
+17
+00:00:40,980 --> 00:00:43,720
+it says use subnet setting disable.
+
+18
+00:00:43,720 --> 00:00:47,160
+So it turns out that in subnets you have a setting
+
+19
+00:00:47,160 --> 00:00:50,640
+and you can right click and modify the auto IP setting.
+
+20
+00:00:50,640 --> 00:00:52,070
+So because these are public subnets,
+
+21
+00:00:52,070 --> 00:00:54,689
+we want our instances to have a public IP.
+
+22
+00:00:54,689 --> 00:00:58,190
+So I'll modify this setting and enable auto-assign
+
+23
+00:00:58,190 --> 00:01:00,100
+public IPv4 address.
+
+24
+00:01:00,100 --> 00:01:03,400
+Click on save, and I'll do the same for PublicSubnetB.
+
+25
+00:01:03,400 --> 00:01:05,329
+This way, when create and instance, automatically
+
+26
+00:01:05,329 --> 00:01:08,960
+by default it should get an IPv4 address.
+
+27
+00:01:08,960 --> 00:01:10,750
+Okay, so this is done.
+
+28
+00:01:10,750 --> 00:01:12,570
+Now we go back to our EC2 console.
+
+29
+00:01:12,570 --> 00:01:14,560
+We're just going to refresh,
+
+30
+00:01:14,560 --> 00:01:19,560
+select our demo VPC and I'll select my PublicSubnnetA
+
+31
+00:01:19,840 --> 00:01:24,020
+and now you see auto-assign Public IP is enabled.
+
+32
+00:01:24,020 --> 00:01:26,080
+Okay, because we changed that subnet setting.
+
+33
+00:01:26,080 --> 00:01:28,090
+Great, so we have this ready.
+
+34
+00:01:28,090 --> 00:01:29,670
+All this is good.
+
+35
+00:01:29,670 --> 00:01:31,190
+Nothing is changed, I'm not going to
+
+36
+00:01:31,190 --> 00:01:33,250
+set any user data for now.
+
+37
+00:01:33,250 --> 00:01:35,060
+And I'll click on add storage.
+
+38
+00:01:35,060 --> 00:01:36,020
+Add storage is fine.
+
+39
+00:01:36,020 --> 00:01:38,740
+Add tags, configure security group
+
+40
+00:01:38,740 --> 00:01:41,940
+will allow for 22 in from anywhere.
+
+41
+00:01:41,940 --> 00:01:43,120
+Review and launch.
+
+42
+00:01:43,120 --> 00:01:46,270
+And launch and here we say yes I do have my key pair.
+
+43
+00:01:46,270 --> 00:01:48,540
+Launch my instances and here we go.
+
+44
+00:01:48,540 --> 00:01:50,910
+So my instance is now starting.
+
+45
+00:01:50,910 --> 00:01:55,910
+And as we can see it has a private IP of 10.0.0.108,
+
+46
+00:01:55,972 --> 00:01:58,710
+so that is within our cidr for our subnet.
+
+47
+00:01:58,710 --> 00:02:01,940
+And the IPv4, Public IP is this one.
+
+48
+00:02:01,940 --> 00:02:03,800
+Now I'm going to pause until it is started.
+
+49
+00:02:03,800 --> 00:02:06,030
+So my instance has been created, it's running,
+
+50
+00:02:06,030 --> 00:02:09,800
+it has an IP address so why I don't try to SSH into it.
+
+51
+00:02:09,800 --> 00:02:13,620
+And so I'm going to type my SSH command, press enter
+
+52
+00:02:13,620 --> 00:02:16,190
+and nothing happens, this is sort of a time out.
+
+53
+00:02:16,190 --> 00:02:17,640
+So this is weird, right?
+
+54
+00:02:17,640 --> 00:02:19,310
+Timeout means security group issues
+
+55
+00:02:19,310 --> 00:02:21,650
+but I'm pretty sure my security group does
+
+56
+00:02:21,650 --> 00:02:24,200
+allow port 22s if we look at inbound rules,
+
+57
+00:02:24,200 --> 00:02:27,120
+port 22 is open and has a public IPv4,
+
+58
+00:02:27,120 --> 00:02:28,430
+so what's happening?
+
+59
+00:02:28,430 --> 00:02:30,300
+Well, what's happening is that it doesn't have
+
+60
+00:02:30,300 --> 00:02:31,440
+internet connection.
+
+61
+00:02:31,440 --> 00:02:33,760
+So this goes into this sec lecture where we're
+
+62
+00:02:33,760 --> 00:02:35,960
+going to set up an internet gateway.
+
+63
+00:02:35,960 --> 00:02:39,050
+So internet gateways, they will help our instances
+
+64
+00:02:39,050 --> 00:02:41,290
+in our VPC connect with the internet.
+
+65
+00:02:41,290 --> 00:02:42,880
+And they will scale horizontally,
+
+66
+00:02:42,880 --> 00:02:44,662
+they will be high availability and redundant
+
+67
+00:02:44,662 --> 00:02:47,460
+and they will be created separately from our VPC
+
+68
+00:02:47,460 --> 00:02:49,850
+so this is something we have to do in the UI
+
+69
+00:02:49,850 --> 00:02:51,300
+from a separate way.
+
+70
+00:02:51,300 --> 00:02:53,990
+Now one VPC can only be attached to one internet
+
+71
+00:02:53,990 --> 00:02:55,690
+gateway and vice versa.
+
+72
+00:02:55,690 --> 00:02:57,600
+And it turns out the internet gateway is also a NAT
+
+73
+00:02:57,600 --> 00:02:59,940
+device for the instances that have a public IPv4,
+
+74
+00:02:59,940 --> 00:03:01,810
+which is exactly what we need.
+
+75
+00:03:01,810 --> 00:03:02,840
+Okay.
+
+76
+00:03:02,840 --> 00:03:05,100
+On their own though internet gateways do not allow
+
+77
+00:03:05,100 --> 00:03:06,220
+internet access.
+
+78
+00:03:06,220 --> 00:03:09,080
+We'll also have to edit route tables.
+
+79
+00:03:09,080 --> 00:03:11,360
+So first, let's take a look at our diagram,
+
+80
+00:03:11,360 --> 00:03:13,350
+we're going to add an internet gateway
+
+81
+00:03:13,350 --> 00:03:15,107
+at the very top of our VPC
+
+82
+00:03:15,107 --> 00:03:18,630
+and this should provide internet access for our instances.
+
+83
+00:03:18,630 --> 00:03:19,810
+So let's do this right now.
+
+84
+00:03:19,810 --> 00:03:22,870
+So back into my subnets console I'm going to
+
+85
+00:03:22,870 --> 00:03:26,000
+go to the left hand side and click on internet gateways.
+
+86
+00:03:26,000 --> 00:03:28,380
+I'm going to create an internet gateway.
+
+87
+00:03:28,380 --> 00:03:32,650
+Name tag is going to be DemoIGW for internet gateway.
+
+88
+00:03:32,650 --> 00:03:33,860
+Click on Create.
+
+89
+00:03:33,860 --> 00:03:35,250
+It was being created.
+
+90
+00:03:35,250 --> 00:03:36,170
+Excellent.
+
+91
+00:03:36,170 --> 00:03:38,470
+So I'm just going to remove the filter of my VPC so I can
+
+92
+00:03:38,470 --> 00:03:41,730
+see two internet gateways, one is attached to my default
+
+93
+00:03:41,730 --> 00:03:45,420
+VPC and one that I've just created is currently detached.
+
+94
+00:03:45,420 --> 00:03:48,200
+So for it I right click and attach to VPC.
+
+95
+00:03:48,200 --> 00:03:50,750
+I also like to VPC ID this one.
+
+96
+00:03:50,750 --> 00:03:53,000
+And if you wanted, here is the command line to do it
+
+97
+00:03:53,000 --> 00:03:54,540
+if you wanted to do it from the CLI.
+
+98
+00:03:54,540 --> 00:03:56,960
+Okay, click on attach.
+
+99
+00:03:56,960 --> 00:04:00,000
+And now my internet gateway is attached.
+
+100
+00:04:00,000 --> 00:04:03,110
+And VPCs can only have one internet gateway attached
+
+101
+00:04:03,110 --> 00:04:05,311
+to them, so if you try to create a new internet gateway
+
+102
+00:04:05,311 --> 00:04:07,610
+and attach to the VPC it will just not work.
+
+103
+00:04:07,610 --> 00:04:09,960
+So one internet gateway per VPC,
+
+104
+00:04:09,960 --> 00:04:11,940
+that is a common exam question.
+
+105
+00:04:11,940 --> 00:04:15,810
+Okay, so we have attached our internet gateway to our VPC
+
+106
+00:04:15,810 --> 00:04:17,970
+and it looks like it should work right now.
+
+107
+00:04:17,970 --> 00:04:21,740
+So let's go to our SSH, try again,
+
+108
+00:04:21,740 --> 00:04:23,570
+and still nothing happens.
+
+109
+00:04:23,570 --> 00:04:24,403
+So what happens?
+
+110
+00:04:24,403 --> 00:04:26,090
+We've created an internet gateway,
+
+111
+00:04:26,090 --> 00:04:29,600
+but it still cannot SSH into our instance.
+
+112
+00:04:29,600 --> 00:04:32,130
+Well, it turns out if you did follow my slide,
+
+113
+00:04:32,130 --> 00:04:35,300
+that I said that we also have to change the route tables.
+
+114
+00:04:35,300 --> 00:04:37,250
+So let's go ahead and change the route tables now.
+
+115
+00:04:37,250 --> 00:04:38,810
+If we take a look at what we have,
+
+116
+00:04:38,810 --> 00:04:41,440
+we have our EC2 instance, it's public,
+
+117
+00:04:41,440 --> 00:04:43,130
+it has a security group attached to it.
+
+118
+00:04:43,130 --> 00:04:45,686
+But what we have to do is edit the route table
+
+119
+00:04:45,686 --> 00:04:48,820
+for our subnets and make sure that it points
+
+120
+00:04:48,820 --> 00:04:51,880
+to the internet gateway for a specific IP range.
+
+121
+00:04:51,880 --> 00:04:55,360
+And then from there, our EC2 will get routed
+
+122
+00:04:55,360 --> 00:04:57,840
+directly into the internet gateway and we'll be able
+
+123
+00:04:57,840 --> 00:05:00,017
+to access the internet www.
+
+124
+00:05:00,860 --> 00:05:04,660
+And so we'll be able hence to SSH into our public EC2.
+
+125
+00:05:04,660 --> 00:05:06,100
+So let's give this a try.
+
+126
+00:05:06,100 --> 00:05:07,310
+So back into our UI.
+
+127
+00:05:07,310 --> 00:05:11,440
+We're going to go to route table and we see if we select
+
+128
+00:05:11,440 --> 00:05:14,760
+our VPC demo VPC, we have one route table
+
+129
+00:05:14,760 --> 00:05:16,640
+and this is the main table.
+
+130
+00:05:16,640 --> 00:05:18,280
+Now I don't really like the main table,
+
+131
+00:05:18,280 --> 00:05:20,730
+this is basically the default and anytime you create
+
+132
+00:05:20,730 --> 00:05:23,017
+a subnet and you don't associate it with a route table,
+
+133
+00:05:23,017 --> 00:05:25,828
+it will directly go within the main route table
+
+134
+00:05:25,828 --> 00:05:28,660
+and I don't like to edit this main route table,
+
+135
+00:05:28,660 --> 00:05:29,950
+I'll just leave it as is.
+
+136
+00:05:29,950 --> 00:05:32,130
+I'm going to create two route tables,
+
+137
+00:05:32,130 --> 00:05:34,580
+the first one is going to be PublicRouteTable,
+
+138
+00:05:35,678 --> 00:05:39,080
+so this one is going to be for public for my demo VPC.
+
+139
+00:05:39,080 --> 00:05:42,325
+And click on create and I'm also going to create a
+
+140
+00:05:42,325 --> 00:05:44,367
+PrivateRouteTable for my private subnets
+
+141
+00:05:48,790 --> 00:05:49,870
+in the same VPC.
+
+142
+00:05:49,870 --> 00:05:52,310
+And the reason I'm doing this is because I don't personally
+
+143
+00:05:52,310 --> 00:05:55,800
+like having a main default table, but it's up to you to
+
+144
+00:05:55,800 --> 00:05:58,150
+keep this main and not have a private route.
+
+145
+00:05:58,150 --> 00:06:00,483
+Anyway, for this public route table, we basically
+
+146
+00:06:00,483 --> 00:06:04,010
+want to associate it with our public subnets.
+
+147
+00:06:04,010 --> 00:06:07,280
+So this one is my public and this one is my public,
+
+148
+00:06:07,280 --> 00:06:09,160
+so I've associated my public subnets
+
+149
+00:06:09,160 --> 00:06:11,200
+with my public route table.
+
+150
+00:06:11,200 --> 00:06:14,410
+And then for my private route table, I'll also edit
+
+151
+00:06:14,410 --> 00:06:17,300
+the association and I basically associate my private
+
+152
+00:06:17,300 --> 00:06:21,360
+here and here with my private route table.
+
+153
+00:06:21,360 --> 00:06:23,180
+Okay, so everything is associated
+
+154
+00:06:23,180 --> 00:06:25,900
+and now we have to take care of routes.
+
+155
+00:06:25,900 --> 00:06:27,839
+So a route table is going to do routing,
+
+156
+00:06:27,839 --> 00:06:31,650
+so it a route tab, we basically see how things work.
+
+157
+00:06:31,650 --> 00:06:36,650
+So, it says that any IP that has a destination 10.0.0/16,
+
+158
+00:06:37,460 --> 00:06:40,480
+so anytime I hit an IP within this cidr, which is my whole
+
+159
+00:06:40,480 --> 00:06:43,910
+VPC cidr, the target is going to be local.
+
+160
+00:06:43,910 --> 00:06:46,200
+That means that, well it turns out that we know
+
+161
+00:06:46,200 --> 00:06:48,349
+that all this IP belongs to this network,
+
+162
+00:06:48,349 --> 00:06:50,370
+so this is a local network.
+
+163
+00:06:50,370 --> 00:06:52,560
+And for private route table, this is fine,
+
+164
+00:06:52,560 --> 00:06:54,340
+'cause we don't want them to be accessible
+
+165
+00:06:54,340 --> 00:06:55,173
+from the internet.
+
+166
+00:06:55,173 --> 00:06:57,800
+But for PublicRouteTable, we need to add another route.
+
+167
+00:06:57,800 --> 00:07:01,180
+So I click on PublicRouteTable, I click on edit routes.
+
+168
+00:07:01,180 --> 00:07:03,180
+And here I'm going to add a route and this one
+
+169
+00:07:03,180 --> 00:07:07,870
+is going to be 0.0.0.0/0 which means any IP,
+
+170
+00:07:07,870 --> 00:07:11,540
+so if you talk to any IP then the target is going to be,
+
+171
+00:07:11,540 --> 00:07:13,490
+and here we get a lot of choice,
+
+172
+00:07:13,490 --> 00:07:15,920
+we're going to chose an internet gateway,
+
+173
+00:07:15,920 --> 00:07:17,900
+and this is the one we've created.
+
+174
+00:07:17,900 --> 00:07:20,959
+So we're saying, okay, anytime you hit a private IP
+
+175
+00:07:20,959 --> 00:07:24,010
+in this cidr, then this is the local network,
+
+176
+00:07:24,010 --> 00:07:27,490
+but anytime you hit any other IP, then definitely
+
+177
+00:07:27,490 --> 00:07:29,540
+talk to the internet gateway because it will
+
+178
+00:07:29,540 --> 00:07:31,410
+know what to do for you.
+
+179
+00:07:31,410 --> 00:07:35,100
+So we save the routes and now we should be able to have
+
+180
+00:07:35,100 --> 00:07:38,760
+given access to our EC2 instance internet.
+
+181
+00:07:38,760 --> 00:07:40,930
+So if we look at it, this public route table
+
+182
+00:07:40,930 --> 00:07:43,540
+is associated with our public subnets.
+
+183
+00:07:43,540 --> 00:07:46,910
+Our instance has been launched into our public subnets.
+
+184
+00:07:46,910 --> 00:07:50,430
+And so now, it should be accessible from the internet.
+
+185
+00:07:50,430 --> 00:07:53,070
+So if we go back to our SSH command, try it,
+
+186
+00:07:53,070 --> 00:07:54,560
+here we go, now it works.
+
+187
+00:07:54,560 --> 00:07:57,720
+I've just basically logged into my EC2 instance.
+
+188
+00:07:57,720 --> 00:08:00,610
+And if I do a sudo yum update,
+
+189
+00:08:00,610 --> 00:08:02,560
+let's see if it can connect to the internet,
+
+190
+00:08:02,560 --> 00:08:04,500
+yes it's getting some information
+
+191
+00:08:04,500 --> 00:08:06,330
+and there's no update available for me.
+
+192
+00:08:06,330 --> 00:08:09,039
+But here we go, we've basically given access
+
+193
+00:08:09,039 --> 00:08:13,550
+to the internet to our EC2 instance that go
+
+194
+00:08:13,550 --> 00:08:15,390
+into the public subnets.
+
+195
+00:08:15,390 --> 00:08:18,590
+Right now the private subnet instances will not get
+
+196
+00:08:18,590 --> 00:08:20,380
+any internet access either.
+
+197
+00:08:20,380 --> 00:08:23,110
+So we've solved part of the problem, this is great.
+
+198
+00:08:23,110 --> 00:08:24,870
+And I will see you in the next lecture to keep
+
+199
+00:08:24,870 --> 00:08:26,953
+on building our VPC to be really solid.
+
