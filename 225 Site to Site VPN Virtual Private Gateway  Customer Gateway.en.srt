@@ -1,0 +1,500 @@
+1
+00:00:00,000 --> 00:00:02,820
+<v ->So we are almost complete with this diagram</v>
+
+2
+00:00:02,820 --> 00:00:04,220
+and the last thing we have to do
+
+3
+00:00:04,220 --> 00:00:06,340
+is to connect our corporate data center.
+
+4
+00:00:06,340 --> 00:00:08,200
+So this is where you have your own infrastructure,
+
+5
+00:00:08,200 --> 00:00:12,790
+your own computer to the AWS cloud somewhat directly or not.
+
+6
+00:00:12,790 --> 00:00:15,960
+So, the idea is that, to do site to site VPN,
+
+7
+00:00:15,960 --> 00:00:18,380
+this will establish a Virtual Private Network
+
+8
+00:00:18,380 --> 00:00:21,830
+that will basically make it seem like your corporate network
+
+9
+00:00:21,830 --> 00:00:25,470
+and it uses Cloud VPC, our part of the same network.
+
+10
+00:00:25,470 --> 00:00:26,800
+For this, how does that work?
+
+11
+00:00:26,800 --> 00:00:29,230
+Well we have to create a customer gateway onto
+
+12
+00:00:29,230 --> 00:00:31,810
+the corporate DC and this is something you have to set up.
+
+13
+00:00:31,810 --> 00:00:34,150
+It could be software, it could be hardware.
+
+14
+00:00:34,150 --> 00:00:36,530
+There is a list on the AWS website around what's possible.
+
+15
+00:00:36,530 --> 00:00:38,760
+And then on the VPC side we'll
+
+16
+00:00:38,760 --> 00:00:41,360
+provision what's called a VPN gateway
+
+17
+00:00:41,360 --> 00:00:43,810
+and once the VPN gateway is provisioned,
+
+18
+00:00:43,810 --> 00:00:46,270
+in between the VPN gateway and the customer gateway,
+
+19
+00:00:46,270 --> 00:00:49,440
+we will set up a site to site VPN connection
+
+20
+00:00:49,440 --> 00:00:51,260
+that will basically link the two
+
+21
+00:00:51,260 --> 00:00:53,350
+and our VPC and our corporate DC
+
+22
+00:00:53,350 --> 00:00:55,645
+will be able to talk to eachother.
+
+23
+00:00:55,645 --> 00:00:57,220
+Okay, as for the theory, it's really simple
+
+24
+00:00:57,220 --> 00:00:58,700
+and there is no hands-on because we don't
+
+25
+00:00:58,700 --> 00:01:00,820
+have a corporate data center at our disposal
+
+26
+00:01:00,820 --> 00:01:03,420
+but you just need to get the idea.
+
+27
+00:01:03,420 --> 00:01:06,180
+Customer gateway is on the corporate data center side.
+
+28
+00:01:06,180 --> 00:01:09,130
+VPN gateway is on the VPC side
+
+29
+00:01:09,130 --> 00:01:13,130
+and site to site VPN connection links the two together.
+
+30
+00:01:13,130 --> 00:01:17,040
+So, Virtual Private Gateway is called the VPN concentrator
+
+31
+00:01:17,040 --> 00:01:19,590
+and you set it up on the AWS side.
+
+32
+00:01:19,590 --> 00:01:22,440
+And the Virtual Private Gateway, so VGW,
+
+33
+00:01:22,440 --> 00:01:24,690
+will be created and attached to the VPC from
+
+34
+00:01:24,690 --> 00:01:25,850
+which you want to create the site
+
+35
+00:01:25,850 --> 00:01:28,470
+to site VPN, so it has a VPC level.
+
+36
+00:01:28,470 --> 00:01:31,530
+You can customize the ASN if you know what that means
+
+37
+00:01:31,530 --> 00:01:33,640
+and then for customer gateway,
+
+38
+00:01:33,640 --> 00:01:36,000
+then it's the software or physical device
+
+39
+00:01:36,000 --> 00:01:37,300
+on the customer side, so on your
+
+40
+00:01:37,300 --> 00:01:40,100
+corporate data center side of the VPN connection,
+
+41
+00:01:40,100 --> 00:01:41,870
+and there's a list of all the devices
+
+42
+00:01:41,870 --> 00:01:44,100
+that AWS has tested here at this URL.
+
+43
+00:01:44,100 --> 00:01:46,650
+So I invite you to look at it in your own time
+
+44
+00:01:46,650 --> 00:01:48,870
+and for the IP address of your customer gateway
+
+45
+00:01:48,870 --> 00:01:51,370
+I think that's a very important part for the exam
+
+46
+00:01:51,370 --> 00:01:54,220
+it's either the static internet-routable
+
+47
+00:01:54,220 --> 00:01:56,320
+IP address for your customer gateway device.
+
+48
+00:01:56,320 --> 00:01:59,010
+So it will have a static IP address.
+
+49
+00:01:59,010 --> 00:02:03,080
+Or, if it's behind a NAT, okay if it's behind a NAT,
+
+50
+00:02:03,080 --> 00:02:06,340
+and that you have NAT-T enabled then instead of
+
+51
+00:02:06,340 --> 00:02:09,000
+using the public IP of your customer gateway,
+
+52
+00:02:09,000 --> 00:02:11,380
+you need to use the public IP of the NAT.
+
+53
+00:02:11,380 --> 00:02:12,950
+Now make sure that NAT in this case
+
+54
+00:02:12,950 --> 00:02:14,490
+is not the NAT on Amazon side,
+
+55
+00:02:14,490 --> 00:02:16,710
+it's the NAT on your network side.
+
+56
+00:02:16,710 --> 00:02:18,980
+So if you have set up a NAT on your network,
+
+57
+00:02:18,980 --> 00:02:21,450
+and your customer gateway is behind that NAT,
+
+58
+00:02:21,450 --> 00:02:23,340
+then use the public IP address of the NAT
+
+59
+00:02:23,340 --> 00:02:24,990
+instead of the customer gateway.
+
+60
+00:02:24,990 --> 00:02:26,320
+That's all you need to know but it's super
+
+61
+00:02:26,320 --> 00:02:27,750
+important going into the exam.
+
+62
+00:02:27,750 --> 00:02:30,550
+Now let's look at the UI just to make this rock-solid.
+
+63
+00:02:30,550 --> 00:02:32,140
+So to set up a VPN connection,
+
+64
+00:02:32,140 --> 00:02:34,570
+we have to go all the way to the bottom here
+
+65
+00:02:34,570 --> 00:02:36,780
+and look at Virtual Private Network
+
+66
+00:02:36,780 --> 00:02:39,330
+and here we can set up customer gateways,
+
+67
+00:02:39,330 --> 00:02:42,460
+Virtual Private Gateway and site to site VPN connection.
+
+68
+00:02:42,460 --> 00:02:44,030
+So let's go one by one.
+
+69
+00:02:44,030 --> 00:02:45,590
+Customer gateway is what you set
+
+70
+00:02:45,590 --> 00:02:47,690
+up on your own side, okay?
+
+71
+00:02:47,690 --> 00:02:48,570
+It's something you have to set up
+
+72
+00:02:48,570 --> 00:02:52,960
+so if you know customer gateway we've tested,
+
+73
+00:02:52,960 --> 00:02:55,713
+this is what you type into Google, AWS,
+
+74
+00:02:55,713 --> 00:02:57,230
+and it will give you a list of all
+
+75
+00:02:57,230 --> 00:02:59,080
+the customer gateway devices they've tested.
+
+76
+00:02:59,080 --> 00:03:01,340
+So all these things have been tested
+
+77
+00:03:01,340 --> 00:03:03,400
+and you can set it up in your own infrastructure
+
+78
+00:03:03,400 --> 00:03:05,400
+and that will set up a customer gateway.
+
+79
+00:03:05,400 --> 00:03:06,870
+And then once you have that,
+
+80
+00:03:06,870 --> 00:03:09,460
+you create a customer gateway in AWS,
+
+81
+00:03:09,460 --> 00:03:11,720
+you give it a name, you say whether or not
+
+82
+00:03:11,720 --> 00:03:14,150
+it's a static or a dynamic routing
+
+83
+00:03:14,150 --> 00:03:16,900
+and you put the static IP address, okay?
+
+84
+00:03:16,900 --> 00:03:18,900
+And as you can see in the information box here
+
+85
+00:03:18,900 --> 00:03:21,490
+it says, specify the internet-routable
+
+86
+00:03:21,490 --> 00:03:23,850
+IP address for your gateway's external interface.
+
+87
+00:03:23,850 --> 00:03:27,260
+It must be static and it may be behind a NAT, okay?
+
+88
+00:03:27,260 --> 00:03:28,350
+And if you have the NAT then put
+
+89
+00:03:28,350 --> 00:03:30,210
+the static IP address of the NAT.
+
+90
+00:03:30,210 --> 00:03:31,970
+Okay, cancel.
+
+91
+00:03:31,970 --> 00:03:33,700
+And now well that we have a customer
+
+92
+00:03:33,700 --> 00:03:35,810
+gateway that has been created, okay?
+
+93
+00:03:35,810 --> 00:03:37,920
+We set up a Virtual Private Gateway
+
+94
+00:03:37,920 --> 00:03:39,950
+and we click on Virtual Private Gateway.
+
+95
+00:03:39,950 --> 00:03:43,907
+We give this a tag, so whatever you want, DemoVPG, yes
+
+96
+00:03:45,280 --> 00:03:48,820
+and then basically, or VGW, and then basically
+
+97
+00:03:48,820 --> 00:03:52,130
+here you can either set the Amazon default ASN,
+
+98
+00:03:52,130 --> 00:03:53,960
+or you can set up a custom ASN.
+
+99
+00:03:53,960 --> 00:03:55,420
+This is more details, this is when
+
+100
+00:03:55,420 --> 00:03:56,950
+you really know what networking is.
+
+101
+00:03:56,950 --> 00:03:59,560
+And then once you're done you have a customer gateway
+
+102
+00:03:59,560 --> 00:04:01,590
+and you have a Virtual Private Gateway,
+
+103
+00:04:01,590 --> 00:04:04,080
+and here you set up a site to site VPN connection
+
+104
+00:04:04,080 --> 00:04:06,680
+so you create the VPN connection, you give it a name.
+
+105
+00:04:06,680 --> 00:04:10,290
+Then you have to select Virtual Private Gateway.
+
+106
+00:04:10,290 --> 00:04:12,880
+Then you have to select a Customer Gateway
+
+107
+00:04:12,880 --> 00:04:15,840
+and then basically you set up tunnel instructions.
+
+108
+00:04:15,840 --> 00:04:16,673
+First thing you have two tunnels
+
+109
+00:04:16,673 --> 00:04:18,690
+to have some kind of redundancy and you're done
+
+110
+00:04:18,690 --> 00:04:20,720
+and then you have a VPN connection between the two.
+
+111
+00:04:20,720 --> 00:04:21,930
+Now obviously, you see I haven't
+
+112
+00:04:21,930 --> 00:04:23,340
+created anything because I don't have
+
+113
+00:04:23,340 --> 00:04:25,510
+a corporate data center available to me,
+
+114
+00:04:25,510 --> 00:04:27,210
+but this is the process, what you have to remember
+
+115
+00:04:27,210 --> 00:04:30,020
+is that to create a site to site VPN connection,
+
+116
+00:04:30,020 --> 00:04:31,890
+on your corporate data center side,
+
+117
+00:04:31,890 --> 00:04:33,500
+you need to set up a customer gateway,
+
+118
+00:04:33,500 --> 00:04:35,357
+and on your AWS's side, you need to
+
+119
+00:04:35,357 --> 00:04:37,060
+set up a virtual private gateway
+
+120
+00:04:37,060 --> 00:04:38,530
+and then you connect the two using
+
+121
+00:04:38,530 --> 00:04:40,500
+site to site VPN connection.
+
+122
+00:04:40,500 --> 00:04:41,410
+So that's it for this lecture,
+
+123
+00:04:41,410 --> 00:04:42,670
+just a bit more architectural,
+
+124
+00:04:42,670 --> 00:04:44,210
+less hands-on but I hope you liked it
+
+125
+00:04:44,210 --> 00:04:45,923
+and I will see you in the next one.
+
