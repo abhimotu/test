@@ -1,0 +1,576 @@
+1
+00:00:00,010 --> 00:00:01,950
+<v Instructor>Okay, so let's talk about the difference</v>
+
+2
+00:00:01,950 --> 00:00:03,250
+between CNAME and Alias,
+
+3
+00:00:03,250 --> 00:00:06,190
+'cause in the exam, that is a very common question
+
+4
+00:00:06,190 --> 00:00:07,320
+you may get.
+
+5
+00:00:07,320 --> 00:00:09,290
+So Amazon resources, or AWS resources,
+
+6
+00:00:09,290 --> 00:00:13,040
+such as Load Balancer, CloudFront, et cetera,
+
+7
+00:00:13,040 --> 00:00:16,300
+they will expose an Amazon, AWS URL.
+
+8
+00:00:16,300 --> 00:00:18,080
+So for Load Balancer, it may look like this.
+
+9
+00:00:18,080 --> 00:00:23,080
+Lb1-123.us-east-2.elb.amazonaws.com.
+
+10
+00:00:23,400 --> 00:00:27,350
+And maybe you want this to be myapp.mydomain.com.
+
+11
+00:00:27,350 --> 00:00:29,900
+So for this we'll use, Route 53.
+
+12
+00:00:29,900 --> 00:00:30,870
+We have two options.
+
+13
+00:00:30,870 --> 00:00:32,070
+The first one is to use a CNAME.
+
+14
+00:00:32,070 --> 00:00:37,070
+Remember, a CNAME makes a URL point to any other URL.
+
+15
+00:00:37,320 --> 00:00:41,130
+So we can map app.mydomain.com to
+
+16
+00:00:41,130 --> 00:00:43,280
+blabla.anything.com.
+
+17
+00:00:43,280 --> 00:00:44,700
+Anything you want, right?
+
+18
+00:00:44,700 --> 00:00:47,330
+So CNAME though, you need to know something about it,
+
+19
+00:00:47,330 --> 00:00:50,710
+it's only for non root domain.
+
+20
+00:00:50,710 --> 00:00:54,990
+So we need it to be something.mydomain.com.
+
+21
+00:00:54,990 --> 00:00:57,210
+It cannot be just mydomain.com.
+
+22
+00:00:57,210 --> 00:01:00,320
+It has to be something.mydomain.com.
+
+23
+00:01:00,320 --> 00:01:01,680
+Very important.
+
+24
+00:01:01,680 --> 00:01:06,680
+Alias now, points a URL to an AWS resource only.
+
+25
+00:01:07,630 --> 00:01:12,427
+So app.mydomain.com points to, blabla.amazonaws.com.
+
+26
+00:01:14,560 --> 00:01:19,420
+And it works for both root domain and non root domain.
+
+27
+00:01:19,420 --> 00:01:22,970
+So it can work for mydomain.com.
+
+28
+00:01:22,970 --> 00:01:26,230
+On top of it, Alias is free of charge,
+
+29
+00:01:26,230 --> 00:01:29,330
+and it has a support for native health checks.
+
+30
+00:01:29,330 --> 00:01:31,580
+So the example has two questions such as hey,
+
+31
+00:01:31,580 --> 00:01:35,470
+we want to point mydomain.com to our Load Balancer,
+
+32
+00:01:35,470 --> 00:01:37,900
+should you use CNAME or Alias?
+
+33
+00:01:37,900 --> 00:01:40,500
+And the answer is, you should use Alias,
+
+34
+00:01:40,500 --> 00:01:44,705
+because CNAME do no support root domains,
+
+35
+00:01:44,705 --> 00:01:46,030
+only for non root domains.
+
+36
+00:01:46,030 --> 00:01:49,090
+So it must be something.mydomain.com.
+
+37
+00:01:49,090 --> 00:01:51,620
+Once you get, understand this, then this is perfect.
+
+38
+00:01:51,620 --> 00:01:52,980
+Let's have a look in the hands on tool
+
+39
+00:01:52,980 --> 00:01:55,180
+to understand what I mean by this.
+
+40
+00:01:55,180 --> 00:01:57,780
+So currently I have an A record for my root domain,
+
+41
+00:01:57,780 --> 00:02:00,730
+so I'm going to delete this just for now.
+
+42
+00:02:00,730 --> 00:02:02,840
+Okay, now I'm going to create a record set.
+
+43
+00:02:02,840 --> 00:02:05,210
+So let me close everything, here we go.
+
+44
+00:02:05,210 --> 00:02:06,860
+I'll create a record set
+
+45
+00:02:06,860 --> 00:02:10,067
+and this is going to be myapp.stephanetheteacher.com.
+
+46
+00:02:11,270 --> 00:02:14,440
+And first choice is for me to get a CNAME.
+
+47
+00:02:14,440 --> 00:02:16,080
+And I'll make it a CNAME directly
+
+48
+00:02:16,080 --> 00:02:18,110
+to the load balancer I have.
+
+49
+00:02:18,110 --> 00:02:21,100
+So I scroll down, click on load balancer
+
+50
+00:02:21,100 --> 00:02:23,410
+and I'll select this GNS name right here
+
+51
+00:02:23,410 --> 00:02:26,440
+and I'll say okay, CNAME, pointing to this,
+
+52
+00:02:26,440 --> 00:02:28,410
+this is a very valid CNAME,
+
+53
+00:02:28,410 --> 00:02:30,410
+and it works, I'll click on create.
+
+54
+00:02:30,410 --> 00:02:31,810
+And as we can see now,
+
+55
+00:02:31,810 --> 00:02:36,810
+if I go to myapp.stephanetheteacher.com,
+
+56
+00:02:38,430 --> 00:02:40,820
+as we can see, we get the Hello World directly from
+
+57
+00:02:40,820 --> 00:02:42,970
+the load balancer which points to the EC2 instance.
+
+58
+00:02:42,970 --> 00:02:45,440
+So this is working really, really great.
+
+59
+00:02:45,440 --> 00:02:48,530
+Also what I could be doing, is instead of doing a CNAME,
+
+60
+00:02:48,530 --> 00:02:49,750
+I could use an Alias record,
+
+61
+00:02:49,750 --> 00:02:51,220
+because this is a load balancer,
+
+62
+00:02:51,220 --> 00:02:53,770
+so here I'm doing something inefficient,
+
+63
+00:02:53,770 --> 00:02:55,680
+I'm pointing directly to an amazon resources
+
+64
+00:02:55,680 --> 00:02:58,550
+but I don't take advantage of the Alias feature.
+
+65
+00:02:58,550 --> 00:02:59,650
+So I create a record,
+
+66
+00:02:59,650 --> 00:03:00,757
+I'll call it myalias
+
+67
+00:03:01,919 --> 00:03:04,080
+and there I'm going to make this an Alias record,
+
+68
+00:03:04,080 --> 00:03:05,890
+so click on the Alias yes,
+
+69
+00:03:05,890 --> 00:03:07,130
+and you can say, okay,
+
+70
+00:03:07,130 --> 00:03:08,490
+either you choose a target name
+
+71
+00:03:08,490 --> 00:03:11,430
+and to be honest I'm still confused by how this works
+
+72
+00:03:11,430 --> 00:03:14,930
+because sometimes it doesn't show what you wanna have.
+
+73
+00:03:14,930 --> 00:03:17,230
+Or it says you can also type the domain name
+
+74
+00:03:17,230 --> 00:03:18,690
+for the resource directly in there.
+
+75
+00:03:18,690 --> 00:03:22,360
+So if I just paste this, it will work and find right away
+
+76
+00:03:22,360 --> 00:03:24,400
+that it is my load balancer in there.
+
+77
+00:03:24,400 --> 00:03:27,680
+So I've pasted this and we get an Alias hosted zone ID
+
+78
+00:03:27,680 --> 00:03:29,160
+so this is perfect.
+
+79
+00:03:29,160 --> 00:03:33,030
+Click on create and here we go, we have an Alias record
+
+80
+00:03:33,030 --> 00:03:33,960
+being created.
+
+81
+00:03:33,960 --> 00:03:36,050
+And so if I try this URL
+
+82
+00:03:36,050 --> 00:03:38,470
+myalias.stephanetheteacher.com,
+
+83
+00:03:38,470 --> 00:03:39,790
+I get the exact same result,
+
+84
+00:03:39,790 --> 00:03:40,940
+pointing to the load balancer
+
+85
+00:03:40,940 --> 00:03:42,240
+and eu-west-1c.
+
+86
+00:03:42,240 --> 00:03:45,960
+So in that regards, my CNAME, myapp and myalias,
+
+87
+00:03:45,960 --> 00:03:49,250
+they do the exact same purpose, one is an Alias record,
+
+88
+00:03:49,250 --> 00:03:51,960
+one is a CNAME, and so this one is going to be free,
+
+89
+00:03:51,960 --> 00:03:53,140
+this one going to be paid,
+
+90
+00:03:53,140 --> 00:03:55,130
+but they achieve sort of the same purpose.
+
+91
+00:03:55,130 --> 00:03:58,730
+Overall I do recommend for you to use myalias.
+
+92
+00:03:58,730 --> 00:04:00,310
+As we can see though, in myalias,
+
+93
+00:04:00,310 --> 00:04:02,560
+we can evaluate the target health right away
+
+94
+00:04:02,560 --> 00:04:03,820
+by clicking on yes,
+
+95
+00:04:03,820 --> 00:04:05,560
+and it will directly leverage
+
+96
+00:04:05,560 --> 00:04:08,170
+the load balancer health checks for this
+
+97
+00:04:08,170 --> 00:04:09,400
+which is really, really cool.
+
+98
+00:04:09,400 --> 00:04:10,920
+But for now, just leave it as no.
+
+99
+00:04:10,920 --> 00:04:11,930
+Okay.
+
+100
+00:04:11,930 --> 00:04:14,330
+Now let's look at root domain.
+
+101
+00:04:14,330 --> 00:04:16,460
+So if I go on stephanetheteacher.com,
+
+102
+00:04:16,460 --> 00:04:19,790
+I can make this an alias and enter the target name in there,
+
+103
+00:04:19,790 --> 00:04:22,030
+and click on create and this works just fine.
+
+104
+00:04:22,030 --> 00:04:23,750
+So stephanetheteacher.com,
+
+105
+00:04:23,750 --> 00:04:25,970
+is an Alias directly to my load balancer.
+
+106
+00:04:25,970 --> 00:04:28,610
+So my root domain, is an Alias.
+
+107
+00:04:28,610 --> 00:04:30,210
+And that works just fine.
+
+108
+00:04:30,210 --> 00:04:32,490
+But if I create a record set and this time,
+
+109
+00:04:32,490 --> 00:04:34,550
+so let me just delete this one obviously first,
+
+110
+00:04:34,550 --> 00:04:36,340
+I'll delete this one, confirm.
+
+111
+00:04:36,340 --> 00:04:37,730
+So I'll make a new one,
+
+112
+00:04:37,730 --> 00:04:39,290
+stephanetheteacher.com,
+
+113
+00:04:39,290 --> 00:04:42,480
+but this one I'm gonna get a CNAME pointing to
+
+114
+00:04:42,480 --> 00:04:45,300
+and my domain name for my load balancer,
+
+115
+00:04:45,300 --> 00:04:47,960
+which is right here, pointing it and click on create.
+
+116
+00:04:47,960 --> 00:04:51,700
+Here we get an error, saying the CNAME with the DNS name
+
+117
+00:04:51,700 --> 00:04:56,010
+is not permitted at apex in zone, stephanetheteacher.com.
+
+118
+00:04:56,010 --> 00:04:58,620
+So that means that basically I'm trying to create a CNAME
+
+119
+00:04:58,620 --> 00:05:03,177
+at the root of my domain name, so at the apex of my zone
+
+120
+00:05:03,177 --> 00:05:06,830
+and that is just not allowed by Route 53.
+
+121
+00:05:06,830 --> 00:05:08,060
+So I cannot do this.
+
+122
+00:05:08,060 --> 00:05:09,610
+If I wanted to have stephanetheteacher.com
+
+123
+00:05:09,610 --> 00:05:11,180
+pointing to my load balancer,
+
+124
+00:05:11,180 --> 00:05:13,580
+CNAME is not an option, it would make an error.
+
+125
+00:05:13,580 --> 00:05:17,190
+The only way to do it would be to select an Alias record
+
+126
+00:05:17,190 --> 00:05:20,500
+and point directly to my load balancer in there.
+
+127
+00:05:20,500 --> 00:05:23,150
+Click on create, and now let's just test that out.
+
+128
+00:05:23,150 --> 00:05:25,600
+I'll go to stehanetheteacher.com,
+
+129
+00:05:25,600 --> 00:05:28,610
+and we'll have to wait just a little bit,
+
+130
+00:05:28,610 --> 00:05:30,340
+for it to work.
+
+131
+00:05:30,340 --> 00:05:32,710
+So let me just wait one second,
+
+132
+00:05:32,710 --> 00:05:34,050
+and they use an incognito window
+
+133
+00:05:34,050 --> 00:05:36,360
+just to make sure that I have no DNS cache
+
+134
+00:05:36,360 --> 00:05:38,430
+but here we go, stephanetheteacher.com,
+
+135
+00:05:38,430 --> 00:05:40,460
+points directly to my load balancer,
+
+136
+00:05:40,460 --> 00:05:42,730
+and it's replied from my EC2 instance.
+
+137
+00:05:42,730 --> 00:05:43,740
+So this is perfect,
+
+138
+00:05:43,740 --> 00:05:47,610
+that just proves that basically Alias records both work
+
+139
+00:05:47,610 --> 00:05:51,050
+for the root domain and also for sub domains.
+
+140
+00:05:51,050 --> 00:05:53,730
+Whereas, CNAME just work for sub domains only.
+
+141
+00:05:53,730 --> 00:05:54,900
+And it is something that you need to know
+
+142
+00:05:54,900 --> 00:05:56,080
+going into the exam.
+
+143
+00:05:56,080 --> 00:05:56,990
+I hope you liked this lecture,
+
+144
+00:05:56,990 --> 00:05:58,540
+I will see you in the next one.
+
