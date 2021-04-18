@@ -1,0 +1,784 @@
+1
+00:00:00,070 --> 00:00:02,360
+<v Instructor>A better alternative to NAT Instances</v>
+
+2
+00:00:02,360 --> 00:00:03,290
+is a NAT Gateway.
+
+3
+00:00:03,290 --> 00:00:07,040
+Why? Because AWS will manage this NAT for us,
+
+4
+00:00:07,040 --> 00:00:09,620
+we'll get higher bandwidth, we'll get better availability,
+
+5
+00:00:09,620 --> 00:00:12,600
+and overall, no administration required.
+
+6
+00:00:12,600 --> 00:00:14,400
+We're going to pay by the hour
+
+7
+00:00:14,400 --> 00:00:16,260
+for the usage and the bandwidth
+
+8
+00:00:16,260 --> 00:00:18,370
+and the NAT will be created in a specific AZ,
+
+9
+00:00:18,370 --> 00:00:20,780
+it will use an EIP, but we don't have to worry
+
+10
+00:00:20,780 --> 00:00:22,200
+about any of that.
+
+11
+00:00:22,200 --> 00:00:24,960
+It cannot be used by an instance from the same subnet
+
+12
+00:00:24,960 --> 00:00:26,850
+where we created it, only from the other subnet,
+
+13
+00:00:26,850 --> 00:00:27,740
+which is fine.
+
+14
+00:00:27,740 --> 00:00:30,350
+And it will require an Internet Gateway to be set up,
+
+15
+00:00:30,350 --> 00:00:31,840
+but we already have one.
+
+16
+00:00:31,840 --> 00:00:34,630
+So the trick is that the private subnet will talk
+
+17
+00:00:34,630 --> 00:00:37,427
+to the NAT Gateway, which will talk to the Internet Gateway,
+
+18
+00:00:37,427 --> 00:00:39,500
+and this way we'll get internet connectivity
+
+19
+00:00:39,500 --> 00:00:41,800
+for our private subnet instances.
+
+20
+00:00:41,800 --> 00:00:45,370
+We get five gigabytes of bandwidth with automatic scaling
+
+21
+00:00:45,370 --> 00:00:48,777
+up to 45 gigabytes so it can scale to tremendous bandwidth,
+
+22
+00:00:48,777 --> 00:00:51,170
+and overall we don't have any security group
+
+23
+00:00:51,170 --> 00:00:53,360
+to manage, or that is required.
+
+24
+00:00:53,360 --> 00:00:55,360
+So, overall it seems like it's a no-brainer
+
+25
+00:00:55,360 --> 00:00:56,870
+compared to the pain that it was
+
+26
+00:00:56,870 --> 00:00:59,580
+to set up a NAT Instance in the previous lecture.
+
+27
+00:00:59,580 --> 00:01:01,080
+So let's have a look at the diagram.
+
+28
+00:01:01,080 --> 00:01:02,840
+It is exactly the exact same thing,
+
+29
+00:01:02,840 --> 00:01:05,750
+but the difference is now we'll have a NAT Gateway
+
+30
+00:01:05,750 --> 00:01:08,960
+in our public subnet that is automatically connected
+
+31
+00:01:08,960 --> 00:01:10,720
+to the internet thanks to the route table.
+
+32
+00:01:10,720 --> 00:01:13,467
+And then our route table for our private subnet
+
+33
+00:01:13,467 --> 00:01:16,930
+will have a direct link, a direct route
+
+34
+00:01:16,930 --> 00:01:19,151
+to our VPC NAT Gateway.
+
+35
+00:01:19,151 --> 00:01:21,750
+The NAT Gateway, it is resilient,
+
+36
+00:01:21,750 --> 00:01:24,720
+but only resilient within a single AZ.
+
+37
+00:01:24,720 --> 00:01:26,720
+And if you want high availability,
+
+38
+00:01:26,720 --> 00:01:30,117
+then you are going to need a NAT Gateway in multiple AZ.
+
+39
+00:01:30,117 --> 00:01:32,450
+And that will give you fault-tolerance.
+
+40
+00:01:32,450 --> 00:01:33,960
+So let's have a look at our diagram.
+
+41
+00:01:33,960 --> 00:01:35,201
+We have two AZ.
+
+42
+00:01:35,201 --> 00:01:38,290
+Each AZ will have a public and a private subnet,
+
+43
+00:01:38,290 --> 00:01:41,950
+and we want to make sure we have one NAT Gateway in each AZ,
+
+44
+00:01:41,950 --> 00:01:44,010
+so that we have high availability.
+
+45
+00:01:44,010 --> 00:01:45,870
+So in this case we're going to set up a NAT Gateway
+
+46
+00:01:45,870 --> 00:01:47,535
+in public subnet of AZ A,
+
+47
+00:01:47,535 --> 00:01:50,190
+and we'll set up the according route tables
+
+48
+00:01:50,190 --> 00:01:52,210
+to make sure the traffic is routed properly
+
+49
+00:01:52,210 --> 00:01:53,170
+to the internet.
+
+50
+00:01:53,170 --> 00:01:56,100
+And we'll do the exact same thing on AZ B.
+
+51
+00:01:56,100 --> 00:01:58,040
+So it's a very symmetrical set up.
+
+52
+00:01:58,040 --> 00:02:00,530
+But the idea here is that because now we have two
+
+53
+00:02:00,530 --> 00:02:02,280
+NAT Gateways and two different AZ,
+
+54
+00:02:02,280 --> 00:02:04,570
+there is no cross AZ failover needed
+
+55
+00:02:04,570 --> 00:02:05,820
+because if an AZ goes down,
+
+56
+00:02:05,820 --> 00:02:07,740
+it doesn't need a NAT at all, right?
+
+57
+00:02:07,740 --> 00:02:10,850
+So let's have a look. We just zap this entire AZ.
+
+58
+00:02:10,850 --> 00:02:12,880
+It's completely gone, so imagine it's gone.
+
+59
+00:02:12,880 --> 00:02:16,330
+And we still have access to the internet from AZ B.
+
+60
+00:02:16,330 --> 00:02:17,950
+But if we didn't have a NAT Gateway here,
+
+61
+00:02:17,950 --> 00:02:20,977
+and if the NAT Gateway was going from AZ B to AZ A,
+
+62
+00:02:20,977 --> 00:02:23,780
+and AZ A was going away, then AZ B would lose access
+
+63
+00:02:23,780 --> 00:02:24,760
+to the internet.
+
+64
+00:02:24,760 --> 00:02:26,331
+The bottom line is, for saying something simple
+
+65
+00:02:26,331 --> 00:02:28,349
+in a complicated way, but bottom line is,
+
+66
+00:02:28,349 --> 00:02:31,599
+if you want high availability for your NAT Gateway,
+
+67
+00:02:31,599 --> 00:02:33,950
+you need to make sure you set up your NAT Gateway
+
+68
+00:02:33,950 --> 00:02:35,173
+one in each AZ.
+
+69
+00:02:36,700 --> 00:02:38,880
+So let's have a look at how we can set this up right now.
+
+70
+00:02:38,880 --> 00:02:41,610
+Okay, so let's get back to our VPC now.
+
+71
+00:02:41,610 --> 00:02:45,090
+So, we go back to VPC console in here,
+
+72
+00:02:45,090 --> 00:02:46,840
+and the first thing we're going to do is
+
+73
+00:02:46,840 --> 00:02:48,870
+to completely delete this NAT instance.
+
+74
+00:02:48,870 --> 00:02:50,900
+So we don't want this NAT instance anymore.
+
+75
+00:02:50,900 --> 00:02:52,870
+So we're going to terminate it.
+
+76
+00:02:52,870 --> 00:02:56,030
+Here we go. Go away. That's been terminated.
+
+77
+00:02:56,030 --> 00:02:57,510
+And so what we should see is that
+
+78
+00:02:57,510 --> 00:02:59,160
+when the NAT instance is down,
+
+79
+00:02:59,160 --> 00:03:00,937
+I should lose internet connectivity.
+
+80
+00:03:00,937 --> 00:03:04,140
+So here I am on my instance in my private subnet,
+
+81
+00:03:04,140 --> 00:03:06,960
+and if I ping google.com right now, it's not working.
+
+82
+00:03:06,960 --> 00:03:09,836
+If I do curl for google.com,
+
+83
+00:03:09,836 --> 00:03:11,160
+it should not be working as well.
+
+84
+00:03:11,160 --> 00:03:14,560
+So it has completely lost internet connectivity.
+
+85
+00:03:14,560 --> 00:03:18,180
+Now if we go to our VPC, and we go to our route table,
+
+86
+00:03:18,180 --> 00:03:19,420
+and we take the route table
+
+87
+00:03:19,420 --> 00:03:21,516
+from the private route table in here,
+
+88
+00:03:21,516 --> 00:03:25,030
+right now this target is active to the ENI,
+
+89
+00:03:25,030 --> 00:03:26,670
+but I'm just going to wait a little bit to show you
+
+90
+00:03:26,670 --> 00:03:28,910
+what happens once the instance is terminated.
+
+91
+00:03:28,910 --> 00:03:31,180
+So my instance is now terminated,
+
+92
+00:03:31,180 --> 00:03:33,310
+and we can see from the route table that
+
+93
+00:03:33,310 --> 00:03:36,260
+this destination is now a black hole.
+
+94
+00:03:36,260 --> 00:03:39,500
+So any time, basically, a route does not lead anywhere,
+
+95
+00:03:39,500 --> 00:03:41,730
+anytime the target is down or whatever,
+
+96
+00:03:41,730 --> 00:03:43,520
+we're into a black hole state.
+
+97
+00:03:43,520 --> 00:03:45,060
+And this is bad, that means that
+
+98
+00:03:45,060 --> 00:03:48,380
+basically our instance did indeed lose internet connectivity
+
+99
+00:03:48,380 --> 00:03:51,470
+because this destination does not lead anywhere,
+
+100
+00:03:51,470 --> 00:03:52,720
+it leads into a black hole.
+
+101
+00:03:52,720 --> 00:03:54,240
+But we're going to fix this right now.
+
+102
+00:03:54,240 --> 00:03:55,530
+So what we're going to do
+
+103
+00:03:55,530 --> 00:03:58,450
+is that we're going to create our NAT Gateway.
+
+104
+00:03:58,450 --> 00:04:01,350
+So we click on NAT Gateways, create NAT Gateway,
+
+105
+00:04:01,350 --> 00:04:03,120
+and we select the subnet in which
+
+106
+00:04:03,120 --> 00:04:04,682
+we want to create our NAT Gateway.
+
+107
+00:04:04,682 --> 00:04:06,750
+So we have to remember this subnet list
+
+108
+00:04:06,750 --> 00:04:09,830
+which is always tricky sometimes when the subnet names
+
+109
+00:04:09,830 --> 00:04:12,830
+are not shown, so let's go back to our subnets,
+
+110
+00:04:12,830 --> 00:04:15,270
+and we'll select our demo VPC,
+
+111
+00:04:15,270 --> 00:04:17,373
+we'll take our PublicSubnetA, which is this subnet.
+
+112
+00:04:18,385 --> 00:04:20,330
+I'm going to copy the subnet ID,
+
+113
+00:04:20,330 --> 00:04:22,620
+and paste it here, just so I can find it.
+
+114
+00:04:22,620 --> 00:04:24,450
+Here we go. I found my subnet.
+
+115
+00:04:24,450 --> 00:04:27,850
+And then we can either enter an allocation ID,
+
+116
+00:04:27,850 --> 00:04:29,210
+if you already have an Elastic IP,
+
+117
+00:04:29,210 --> 00:04:33,224
+or we just say create new EIP and automatically a new EIP,
+
+118
+00:04:33,224 --> 00:04:37,020
+Elastic IP, was assigned to this NAT Gateway.
+
+119
+00:04:37,020 --> 00:04:39,020
+Okay. Create NAT Gateway.
+
+120
+00:04:39,020 --> 00:04:40,830
+The NAT Gateway has been created.
+
+121
+00:04:40,830 --> 00:04:43,410
+And now we can edit our route tables to include
+
+122
+00:04:43,410 --> 00:04:45,950
+a route to the following NAT Gateway.
+
+123
+00:04:45,950 --> 00:04:46,860
+So we'll close this,
+
+124
+00:04:46,860 --> 00:04:49,376
+we'll do the routing automatically on our own,
+
+125
+00:04:49,376 --> 00:04:52,230
+so we'll go back to our route table,
+
+126
+00:04:52,230 --> 00:04:53,520
+and private route table,
+
+127
+00:04:53,520 --> 00:04:55,250
+and this is where our black hole was.
+
+128
+00:04:55,250 --> 00:04:56,670
+We're going to edit this one.
+
+129
+00:04:56,670 --> 00:04:59,360
+So instead of pointing to our instance
+
+130
+00:04:59,360 --> 00:05:00,870
+which does not exist anymore,
+
+131
+00:05:00,870 --> 00:05:03,300
+we're going to remove this entirely.
+
+132
+00:05:03,300 --> 00:05:04,910
+And now we're going to say, okay,
+
+133
+00:05:04,910 --> 00:05:08,020
+this route should point to a NAT Gateway,
+
+134
+00:05:08,020 --> 00:05:11,100
+and this NAT Gateway right here, save it,
+
+135
+00:05:11,100 --> 00:05:13,060
+and now the route has been successfully edited,
+
+136
+00:05:13,060 --> 00:05:14,520
+and this route is active.
+
+137
+00:05:14,520 --> 00:05:17,720
+Now we have to wait for this NAT Gateway to get ready
+
+138
+00:05:17,720 --> 00:05:19,260
+and to be up and running,
+
+139
+00:05:19,260 --> 00:05:20,800
+so we have to wait maybe 15 minutes,
+
+140
+00:05:20,800 --> 00:05:23,160
+so I'll just pause the video until then.
+
+141
+00:05:23,160 --> 00:05:25,970
+Okay, so our NAT Gateway has been created.
+
+142
+00:05:25,970 --> 00:05:28,330
+And so if I go back to my ec2 instance,
+
+143
+00:05:28,330 --> 00:05:32,180
+and curl google.com, yes, I get back access to the internet.
+
+144
+00:05:32,180 --> 00:05:35,290
+And can I ping google.com? Let's try this out.
+
+145
+00:05:35,290 --> 00:05:37,810
+Yes, I can also ping google.com and it's working.
+
+146
+00:05:37,810 --> 00:05:40,760
+So, perfect! So this NAT Gateway basically give us access
+
+147
+00:05:40,760 --> 00:05:43,530
+to the internet in our private subnet,
+
+148
+00:05:43,530 --> 00:05:45,690
+but without the whole problems
+
+149
+00:05:45,690 --> 00:05:48,750
+of managing a separate ec2 instance for this.
+
+150
+00:05:48,750 --> 00:05:51,150
+So I think that these lectures are enough
+
+151
+00:05:51,150 --> 00:05:52,170
+to understand the differences
+
+152
+00:05:52,170 --> 00:05:53,960
+between NAT Instance and Gateway,
+
+153
+00:05:53,960 --> 00:05:55,900
+but there is still a very interesting table
+
+154
+00:05:55,900 --> 00:05:58,700
+on the AWS documentation, where there's a comparison,
+
+155
+00:05:58,700 --> 00:06:00,370
+so let's have a quick look at it.
+
+156
+00:06:00,370 --> 00:06:03,190
+So this table compares a NAT Gateway to a NAT Instance.
+
+157
+00:06:03,190 --> 00:06:06,560
+So let's have a look at a few very important points.
+
+158
+00:06:06,560 --> 00:06:08,190
+The first one is high availabilities.
+
+159
+00:06:08,190 --> 00:06:10,720
+So the NAT Gateway is highly available,
+
+160
+00:06:10,720 --> 00:06:13,010
+and you can have one in each AZ,
+
+161
+00:06:13,010 --> 00:06:15,040
+and they're implemented with redundancy,
+
+162
+00:06:15,040 --> 00:06:16,940
+and so this is how you basically make sure
+
+163
+00:06:16,940 --> 00:06:18,860
+that your set up is resilient to failure,
+
+164
+00:06:18,860 --> 00:06:21,320
+whereas NAT Instance, you need to have a script
+
+165
+00:06:21,320 --> 00:06:24,110
+to manage failover between instances.
+
+166
+00:06:24,110 --> 00:06:26,430
+In terms of bandwidth, the NAT Gateway can scale up
+
+167
+00:06:26,430 --> 00:06:28,890
+to 45 gigabytes per second, which is huge.
+
+168
+00:06:28,890 --> 00:06:30,880
+Whereas this one can depend on the bandwidth
+
+169
+00:06:30,880 --> 00:06:31,713
+of the instance type.
+
+170
+00:06:31,713 --> 00:06:34,810
+So if you have a T2 Micro, then you have very low bandwidth.
+
+171
+00:06:34,810 --> 00:06:37,060
+For maintenance, this is managed by AWS,
+
+172
+00:06:37,060 --> 00:06:38,390
+so no need to do anything.
+
+173
+00:06:38,390 --> 00:06:40,195
+But NAT Instance is managed by you,
+
+174
+00:06:40,195 --> 00:06:43,420
+so it's up to you to patch DOS, et cetera, et cetera.
+
+175
+00:06:43,420 --> 00:06:46,300
+Performance. Software is optimized for handling NAT traffic,
+
+176
+00:06:46,300 --> 00:06:49,030
+whereas this one is just a generic Amazon Linux AMI,
+
+177
+00:06:49,030 --> 00:06:51,170
+so there's maybe an overhead on it.
+
+178
+00:06:51,170 --> 00:06:53,640
+And then you can look at all these kind of things here.
+
+179
+00:06:53,640 --> 00:06:55,680
+But this is really interesting to see,
+
+180
+00:06:55,680 --> 00:06:57,072
+and for security groups, for example,
+
+181
+00:06:57,072 --> 00:07:00,240
+you cannot associate a security group with NAT Gateway,
+
+182
+00:07:00,240 --> 00:07:02,120
+whereas here, you have to associate one,
+
+183
+00:07:02,120 --> 00:07:04,400
+and manage that security group on its own.
+
+184
+00:07:04,400 --> 00:07:07,090
+So, I think it's super interesting to look at this table
+
+185
+00:07:07,090 --> 00:07:08,660
+on your own time, so have a look.
+
+186
+00:07:08,660 --> 00:07:10,160
+But overall, I think it is clear
+
+187
+00:07:10,160 --> 00:07:11,837
+that a NAT Gateway is a clearer choice.
+
+188
+00:07:11,837 --> 00:07:14,350
+And sometimes the exam will ask you a question
+
+189
+00:07:14,350 --> 00:07:15,411
+about NAT Instances,
+
+190
+00:07:15,411 --> 00:07:18,839
+usually around disabling source check destination--
+
+191
+00:07:18,839 --> 00:07:22,360
+source destination check, sorry, under that instance,
+
+192
+00:07:22,360 --> 00:07:23,390
+but that's about it.
+
+193
+00:07:23,390 --> 00:07:26,020
+Overall, these two things allow your instances
+
+194
+00:07:26,020 --> 00:07:28,454
+in private subnets to get access to the internet
+
+195
+00:07:28,454 --> 00:07:30,830
+by offering a route to it. Okay?
+
+196
+00:07:30,830 --> 00:07:33,280
+So that's it! I will see you in the next lecture.
+

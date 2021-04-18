@@ -1,0 +1,524 @@
+1
+00:00:00,240 --> 00:00:02,179
+<v Lecturer>So before we go ahead and start</v>
+
+2
+00:00:02,179 --> 00:00:03,589
+creating our own VPC,
+
+3
+00:00:03,589 --> 00:00:06,994
+I want us to walk through the default VPC that comes with
+
+4
+00:00:06,994 --> 00:00:10,200
+all of our accounts when we create a new account in AWS.
+
+5
+00:00:10,200 --> 00:00:13,210
+As soon as you create your account you get a default VPC.
+
+6
+00:00:13,210 --> 00:00:14,139
+If you have an old account,
+
+7
+00:00:14,139 --> 00:00:15,869
+there's a chance you don't have one so try to work
+
+8
+00:00:15,869 --> 00:00:18,059
+within your account if you don't have one.
+
+9
+00:00:18,059 --> 00:00:20,490
+New instances will be launched by default
+
+10
+00:00:20,490 --> 00:00:23,680
+into default VPC if you don't specify any subnets,
+
+11
+00:00:23,680 --> 00:00:26,632
+and the default VPC comes with Internet connectivity
+
+12
+00:00:26,632 --> 00:00:28,541
+and all instances have public IP.
+
+13
+00:00:28,541 --> 00:00:31,583
+This is how we've been able so far to use our instances,
+
+14
+00:00:31,583 --> 00:00:32,662
+do YAML updates,
+
+15
+00:00:32,662 --> 00:00:35,892
+install APACHEE servers, etc., etc.
+
+16
+00:00:35,892 --> 00:00:38,372
+We also get a public and a private DNS
+
+17
+00:00:38,372 --> 00:00:39,903
+for each of our instances,
+
+18
+00:00:39,903 --> 00:00:41,372
+and this you think is a given,
+
+19
+00:00:41,372 --> 00:00:44,221
+but basically this was configured in the default VPC.
+
+20
+00:00:44,221 --> 00:00:46,271
+So now let's go and have a look at
+
+21
+00:00:46,271 --> 00:00:48,831
+what the default VPC looks like in AWS.
+
+22
+00:00:48,831 --> 00:00:51,082
+So my Management Console, I'm going to go ahead
+
+23
+00:00:51,082 --> 00:00:53,415
+and look at the VPC service.
+
+24
+00:00:54,843 --> 00:00:57,172
+Now in this VPC service we have the Dashboard
+
+25
+00:00:57,172 --> 00:00:59,509
+which shows the resources by region.
+
+26
+00:00:59,509 --> 00:01:01,071
+So as we see we have one VPC,
+
+27
+00:01:01,071 --> 00:01:02,282
+three subnets,
+
+28
+00:01:02,282 --> 00:01:03,229
+one route table,
+
+29
+00:01:03,229 --> 00:01:04,954
+one Internet gateway,
+
+30
+00:01:04,954 --> 00:01:06,581
+one DHCP options set,
+
+31
+00:01:06,581 --> 00:01:07,854
+one network ACL,
+
+32
+00:01:07,854 --> 00:01:09,135
+and 12 security groups
+
+33
+00:01:09,135 --> 00:01:10,703
+because I credit many security groups.
+
+34
+00:01:10,703 --> 00:01:12,954
+So, all these things we see right here
+
+35
+00:01:12,954 --> 00:01:15,174
+are basically created by default for us when we
+
+36
+00:01:15,174 --> 00:01:16,703
+do have a new account.
+
+37
+00:01:16,703 --> 00:01:17,983
+We can just play around and create a new account
+
+38
+00:01:17,983 --> 00:01:21,166
+and see what is going to be there.
+
+39
+00:01:21,166 --> 00:01:22,697
+In the end, in this section, we're going to
+
+40
+00:01:22,697 --> 00:01:24,406
+create our own everything,
+
+41
+00:01:24,406 --> 00:01:26,336
+but for now it's good to look at the state
+
+42
+00:01:26,336 --> 00:01:28,425
+of what is already there just to get a small idea
+
+43
+00:01:28,425 --> 00:01:30,057
+of how things work.
+
+44
+00:01:30,057 --> 00:01:30,890
+If you click on Your VPCs, the first thing you see
+
+45
+00:01:30,890 --> 00:01:35,890
+is that we have a VPC right here that has been created,
+
+46
+00:01:36,303 --> 00:01:39,034
+and this is the default VPC.
+
+47
+00:01:39,034 --> 00:01:41,261
+It says here "Default VPC: Yes."
+
+48
+00:01:41,261 --> 00:01:43,861
+If you look at the Ipv4 CIDR, we see that
+
+49
+00:01:43,861 --> 00:01:44,771
+this is this CDIR.
+
+50
+00:01:44,771 --> 00:01:46,354
+So we are interested. We're intrigued.
+
+51
+00:01:46,354 --> 00:01:48,234
+We want to know what this CIDR is,
+
+52
+00:01:48,234 --> 00:01:50,416
+so we'll go to our website, calculate it,
+
+53
+00:01:50,416 --> 00:01:52,836
+and we see the first IP is this one,
+
+54
+00:01:52,836 --> 00:01:53,699
+and the last IP is this one,
+
+55
+00:01:53,699 --> 00:01:57,449
+and we get about 65 thousand IPs in this CIDR.
+
+56
+00:01:57,449 --> 00:01:59,470
+Okay, so this is pretty good.
+
+57
+00:01:59,470 --> 00:02:00,637
+We have a VPC,
+
+58
+00:02:01,737 --> 00:02:03,670
+it has one Ipv4 CIDR block,
+
+59
+00:02:03,670 --> 00:02:06,993
+and there is no flow logs, there is no tags,
+
+60
+00:02:06,993 --> 00:02:08,906
+the description seems to say that there is
+
+61
+00:02:08,906 --> 00:02:13,035
+a network ACL, a Route table, DHCP options set, etc., etc.
+
+62
+00:02:13,035 --> 00:02:15,686
+So this looks like when we create a VPC we're defined
+
+63
+00:02:15,686 --> 00:02:17,275
+just a CIDR.
+
+64
+00:02:17,275 --> 00:02:19,875
+Now we go to subnets, and here we know we
+
+65
+00:02:19,875 --> 00:02:23,575
+can launch instances into three different availability zones
+
+66
+00:02:23,575 --> 00:02:24,744
+and into three different subnets,
+
+67
+00:02:24,744 --> 00:02:25,735
+so here they are.
+
+68
+00:02:25,735 --> 00:02:27,545
+We have Subnet one, two, and three.
+
+69
+00:02:27,545 --> 00:02:30,135
+And these subnets have their own CIDR as well
+
+70
+00:02:30,135 --> 00:02:32,152
+so we can see that each subnet, for example,
+
+71
+00:02:32,152 --> 00:02:34,975
+if we take this one, it may be different for you,
+
+72
+00:02:34,975 --> 00:02:36,724
+but if we take this subnet,
+
+73
+00:02:36,724 --> 00:02:38,474
+and we calculate this CIDR,
+
+74
+00:02:38,474 --> 00:02:39,642
+we can see that the first
+
+75
+00:02:39,642 --> 00:02:41,135
+instance IP is
+
+76
+00:02:41,135 --> 00:02:42,135
+172.31.32.0,
+
+77
+00:02:44,134 --> 00:02:47,623
+and the last one is 172.31.47.255.
+
+78
+00:02:47,623 --> 00:02:50,382
+We get a total host of 4096,
+
+79
+00:02:50,382 --> 00:02:53,904
+but in here we get available IP 4091,
+
+80
+00:02:53,904 --> 00:02:56,216
+there's five IP of differences,
+
+81
+00:02:56,216 --> 00:02:58,702
+we'll see why in a future lecture.
+
+82
+00:02:58,702 --> 00:03:02,504
+It looks like each subnet in there is basically
+
+83
+00:03:02,504 --> 00:03:06,103
+having a CIDR that is within the VPC CIDR,
+
+84
+00:03:06,103 --> 00:03:08,096
+and it looks like all these subnets have
+
+85
+00:03:08,096 --> 00:03:10,455
+a non overlapping CIDR.
+
+86
+00:03:10,455 --> 00:03:13,074
+Now, each of these subnets, we can look at it,
+
+87
+00:03:13,074 --> 00:03:15,662
+it belongs to the VPC we have available,
+
+88
+00:03:15,662 --> 00:03:17,674
+and we have no flow logs,
+
+89
+00:03:17,674 --> 00:03:21,263
+we have a Route Table, basically that is in this VPC
+
+90
+00:03:21,263 --> 00:03:24,622
+and so we'll have a look at this Route Table in a second,
+
+91
+00:03:24,622 --> 00:03:27,464
+and then for Network ACLs, we get allow all traffic
+
+92
+00:03:27,464 --> 00:03:30,274
+as a Network ACL and allow all down traffics
+
+93
+00:03:30,274 --> 00:03:32,973
+it looks like all traffics is allowed in our VPC
+
+94
+00:03:32,973 --> 00:03:35,274
+and your subnet, and then we're good.
+
+95
+00:03:35,274 --> 00:03:36,924
+Now if you look at Route Tables,
+
+96
+00:03:36,924 --> 00:03:38,634
+it looks like we have a Route Table,
+
+97
+00:03:38,634 --> 00:03:40,613
+there's only one of it, and it's a main route table,
+
+98
+00:03:40,613 --> 00:03:43,144
+it belongs to the default VPC,
+
+99
+00:03:43,144 --> 00:03:45,845
+and basically in terms of subnet association,
+
+100
+00:03:45,845 --> 00:03:47,773
+it's associated not explicitly,
+
+101
+00:03:47,773 --> 00:03:50,253
+but it is associated with these three subnets.
+
+102
+00:03:50,253 --> 00:03:53,760
+Look at the routes defined in this route table,
+
+103
+00:03:53,760 --> 00:03:56,749
+basically define how our subnets will get access
+
+104
+00:03:56,749 --> 00:03:58,421
+to the Internet.
+
+105
+00:03:58,421 --> 00:03:59,760
+And if you look at the Internet,
+
+106
+00:03:59,760 --> 00:04:04,140
+it looks like one of these targets is an Internet Gateway.
+
+107
+00:04:04,140 --> 00:04:06,220
+So Internet Gateway is right here and
+
+108
+00:04:06,220 --> 00:04:08,027
+it's attached to the VPC,
+
+109
+00:04:08,027 --> 00:04:09,549
+and there's not much we can do with it,
+
+110
+00:04:09,549 --> 00:04:10,930
+but it looks like the Internet Gateway's
+
+111
+00:04:10,930 --> 00:04:13,109
+going to give us Internet.
+
+112
+00:04:13,109 --> 00:04:16,250
+So, that's all we need to see right here just to get started
+
+113
+00:04:16,250 --> 00:04:19,480
+but we look like a default VPC right now maybe we don't
+
+114
+00:04:19,480 --> 00:04:21,760
+understand anything we see and maybe we don't
+
+115
+00:04:21,760 --> 00:04:22,593
+understand what is route table,
+
+116
+00:04:22,593 --> 00:04:23,426
+where is Internet Gateway,
+
+117
+00:04:23,426 --> 00:04:25,549
+and don't worry, we'll do this one-by-one.
+
+118
+00:04:25,549 --> 00:04:28,530
+But I want you to realize what a Default VPC comes with
+
+119
+00:04:28,530 --> 00:04:31,170
+before we go ahead and create our own VPC.
+
+120
+00:04:31,170 --> 00:04:34,050
+A Default VPC basically comes with a bunch of these
+
+121
+00:04:34,050 --> 00:04:36,467
+four little menus right here,
+
+122
+00:04:37,810 --> 00:04:40,101
+it comes with a VPC, three subnets, one route rable,
+
+123
+00:04:40,101 --> 00:04:44,312
+one Internet Gateway, and then one Network ACL list
+
+124
+00:04:44,312 --> 00:04:47,541
+that allows all inbound and all outbound.
+
+125
+00:04:47,541 --> 00:04:48,952
+We'll see in details what this means
+
+126
+00:04:48,952 --> 00:04:49,810
+and how this works,
+
+127
+00:04:49,810 --> 00:04:51,541
+but before we go ahead into the next lecture,
+
+128
+00:04:51,541 --> 00:04:53,952
+please have a look at the Default VPC.
+
+129
+00:04:53,952 --> 00:04:56,842
+Try playing around, try and see if it means anything to you,
+
+130
+00:04:56,842 --> 00:04:57,675
+and I will see you
+
+131
+00:04:57,675 --> 00:04:59,375
+in the next lecture to create our own VPC.
+

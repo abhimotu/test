@@ -1,0 +1,596 @@
+1
+00:00:00,080 --> 00:00:02,290
+<v Instructor>So, before we go heads-on with VPC,</v>
+
+2
+00:00:02,290 --> 00:00:03,860
+we need to first understand CIDR,
+
+3
+00:00:03,860 --> 00:00:06,380
+and CIDR stands for Classless Inter-Domain Routing,
+
+4
+00:00:06,380 --> 00:00:08,200
+but no-one says that, everyone says CIDR,
+
+5
+00:00:08,200 --> 00:00:11,160
+and this lecture is specific to IPv4.
+
+6
+00:00:11,160 --> 00:00:14,836
+So, CIDR are used when you have Security Group rules
+
+7
+00:00:14,836 --> 00:00:18,030
+and also, in general, for AWS networking,
+
+8
+00:00:18,030 --> 00:00:19,970
+as we'll see in this section.
+
+9
+00:00:19,970 --> 00:00:21,328
+We've seen CiDRs when we started
+
+10
+00:00:21,328 --> 00:00:22,730
+defining our security groups.
+
+11
+00:00:22,730 --> 00:00:27,730
+So, when we have 000/0, or 122/1, et cetera, /32,
+
+12
+00:00:28,260 --> 00:00:32,010
+this was actually a CIDR, but they were very specific ones.
+
+13
+00:00:32,010 --> 00:00:33,590
+So, overall, what do CIDRs do, is well,
+
+14
+00:00:33,590 --> 00:00:36,299
+they help define an IP address range.
+
+15
+00:00:36,299 --> 00:00:39,818
+So, we've seen /32 and that means one IP,
+
+16
+00:00:39,818 --> 00:00:43,350
+and we've seen /0, that means all IPs,
+
+17
+00:00:43,350 --> 00:00:46,480
+but there is in-between zero and 32, a lot of numbers,
+
+18
+00:00:46,480 --> 00:00:51,480
+so we can define, for example, 192.168.00/26,
+
+19
+00:00:51,503 --> 00:00:55,340
+which represents a range of 64 IPs,
+
+20
+00:00:55,340 --> 00:01:00,255
+from 192.168.00 to 192.168.0.63.
+
+21
+00:01:00,255 --> 00:01:02,840
+So, we have to see and understand
+
+22
+00:01:02,840 --> 00:01:05,370
+why this is the case and how this works.
+
+23
+00:01:05,370 --> 00:01:06,960
+So, to understand CIDR, we need to understand
+
+24
+00:01:06,960 --> 00:01:08,960
+that there is two components to it.
+
+25
+00:01:08,960 --> 00:01:12,390
+The first one is the base IP, whatever you want, and then,
+
+26
+00:01:12,390 --> 00:01:16,260
+there is something called the Subnet Mask, the /26 part,
+
+27
+00:01:16,260 --> 00:01:18,960
+and the base IP, represents an IP
+
+28
+00:01:18,960 --> 00:01:21,220
+that it will be contained in the range,
+
+29
+00:01:21,220 --> 00:01:23,010
+where as the subnet mask will define
+
+30
+00:01:23,010 --> 00:01:25,349
+how many bits can change in the IP.
+
+31
+00:01:25,349 --> 00:01:29,340
+So, IP, overall we see them XX.XX.XX.XX,
+
+32
+00:01:29,340 --> 00:01:31,310
+but actually it just zero's and ones,
+
+33
+00:01:31,310 --> 00:01:33,430
+and there are 32 of them.
+
+34
+00:01:33,430 --> 00:01:35,960
+Now, I don't wanna go into specifics of how IP works,
+
+35
+00:01:35,960 --> 00:01:38,460
+but basically the subnet mask allow a few bits
+
+36
+00:01:38,460 --> 00:01:41,060
+of the IP to change, and that will define your range.
+
+37
+00:01:41,060 --> 00:01:42,880
+Now, the Subnet Mask can take two form.
+
+38
+00:01:42,880 --> 00:01:44,360
+If you have a Windows computer,
+
+39
+00:01:44,360 --> 00:01:48,480
+maybe you'll see this, 255.255.255.0.
+
+40
+00:01:48,480 --> 00:01:53,249
+That's less common, or, if you use AWS online, or whatever,
+
+41
+00:01:53,249 --> 00:01:55,090
+you'll see more like /24,
+
+42
+00:01:55,090 --> 00:01:57,234
+which is more common and easier to read.
+
+43
+00:01:57,234 --> 00:01:59,534
+It's up to you though, and in this lecture,
+
+44
+00:01:59,534 --> 00:02:01,660
+and its whole section in AWS,
+
+45
+00:02:01,660 --> 00:02:04,480
+we'll use the more common form, /24.
+
+46
+00:02:04,480 --> 00:02:06,490
+So, let's talk about the Subnet Mask now.
+
+47
+00:02:06,490 --> 00:02:08,610
+They basically allow the underlying IP
+
+48
+00:02:08,610 --> 00:02:11,570
+to get next values from the base IP,
+
+49
+00:02:11,570 --> 00:02:14,040
+because their underlying bits change.
+
+50
+00:02:14,040 --> 00:02:17,070
+So, if you have /32, we allow for one IP,
+
+51
+00:02:17,070 --> 00:02:20,530
+and how do we get that, with 2^0.
+
+52
+00:02:20,530 --> 00:02:24,820
+If we have /31, we allow for 2 IP, because it's 2^1.
+
+53
+00:02:24,820 --> 00:02:29,820
+/30 is 4 IP, 2^2, /29 is 8 IP, 2^3, /28 is 16 IP, 2^4.
+
+54
+00:02:34,790 --> 00:02:36,275
+So, as you can see here, any time
+
+55
+00:02:36,275 --> 00:02:39,390
+we allow a number of bit to change,
+
+56
+00:02:39,390 --> 00:02:41,022
+it's 2 at the power of number of bit to change,
+
+57
+00:02:41,022 --> 00:02:44,000
+that will be added as number of IPs,
+
+58
+00:02:44,000 --> 00:02:47,740
+and as you see, 32 corresponds to 0, 31 corresponds to 1,
+
+59
+00:02:47,740 --> 00:02:50,512
+so, it's basically 32 minus this number,
+
+60
+00:02:50,512 --> 00:02:52,745
+will give us the power in here.
+
+61
+00:02:52,745 --> 00:02:55,757
+So, /27 is 2^5, /26, is 2^6, it's 62 IPs.
+
+62
+00:02:58,170 --> 00:03:03,170
+/25 is 2^7, 128, 256, you get the idea.
+
+63
+00:03:04,000 --> 00:03:08,337
+Now, /16 is 2^16, which is 65,536 IP,
+
+64
+00:03:10,010 --> 00:03:14,435
+and then we'll get /0, which allows all IPs of 2^32.
+
+65
+00:03:14,435 --> 00:03:17,070
+So, you don't need to remember all that, obviously,
+
+66
+00:03:17,070 --> 00:03:21,750
+but you need to understand that it's 2^32, minus the number,
+
+67
+00:03:21,750 --> 00:03:24,535
+right there with the slash, and Quick memo,
+
+68
+00:03:24,535 --> 00:03:26,260
+/32 means no IP number can change,
+
+69
+00:03:26,260 --> 00:03:29,160
+/24 means the last IP number can change,
+
+70
+00:03:29,160 --> 00:03:32,060
+/16, the last two IP numbers can change,
+
+71
+00:03:32,060 --> 00:03:36,210
+/8, the last three, and /0, all IP numbers can change.
+
+72
+00:03:36,210 --> 00:03:37,490
+Just a quick memo.
+
+73
+00:03:37,490 --> 00:03:38,940
+But, now is just go and practice,
+
+74
+00:03:38,940 --> 00:03:41,338
+because I guess this is a new concept for some of you.
+
+75
+00:03:41,338 --> 00:03:44,770
+So, when we have this CIDR, what is it?
+
+76
+00:03:44,770 --> 00:03:47,660
+So, think about it, take time to reflect.
+
+77
+00:03:47,660 --> 00:03:49,739
+So, we have an IP, and we've /24.
+
+78
+00:03:49,739 --> 00:03:51,518
+What does /24 mean?
+
+79
+00:03:51,518 --> 00:03:55,014
+Well, that means that the last number can change, so,
+
+80
+00:03:55,014 --> 00:03:58,051
+we have this range, 192.168.0.0,
+
+81
+00:03:58,051 --> 00:04:02,520
+all the way to 0.255, and that represents 256 IP.
+
+82
+00:04:02,520 --> 00:04:06,140
+/16, what does that mean?
+
+83
+00:04:06,140 --> 00:04:07,810
+Well, that means that the last two number can change,
+
+84
+00:04:07,810 --> 00:04:12,176
+so, we get this range, and that's 65,536 IP,
+
+85
+00:04:12,176 --> 00:04:14,050
+so, as you can see, the last two numbers
+
+86
+00:04:14,050 --> 00:04:18,710
+can change all the way to 255, and finally, this one.
+
+87
+00:04:18,710 --> 00:04:19,543
+So, what is it?
+
+88
+00:04:19,543 --> 00:04:23,175
+It is /32, so that means that no numbers can change,
+
+89
+00:04:23,175 --> 00:04:26,330
+so it's just one IP, were represented,
+
+90
+00:04:26,330 --> 00:04:30,400
+and 0.0.0.0/0, you know already, it's all IP's.
+
+91
+00:04:30,400 --> 00:04:31,997
+So, when in doubt, you can use this little website
+
+92
+00:04:31,997 --> 00:04:34,824
+that I like, called ipaddressguide.com/cidr,
+
+93
+00:04:34,824 --> 00:04:36,940
+and we'll go, have a look at it right now.
+
+94
+00:04:36,940 --> 00:04:39,139
+So, I like this website, because it allows you to convert
+
+95
+00:04:39,139 --> 00:04:43,080
+a CIDR to an IP Range, or, and IP Range to a CIDR.
+
+96
+00:04:43,080 --> 00:04:44,373
+So, it's really helpful if you just know the IP range,
+
+97
+00:04:44,373 --> 00:04:46,923
+you know that you can't figure out the CIDR right away,
+
+98
+00:04:46,923 --> 00:04:48,926
+you just happen in there and then you get the CIDR.
+
+99
+00:04:48,926 --> 00:04:53,926
+So, let's have a look, if we do 10.0.0.0/16.
+
+100
+00:04:54,810 --> 00:04:56,640
+Well, we remember, we do allow
+
+101
+00:04:56,640 --> 00:04:58,470
+the last two numbers to change,
+
+102
+00:04:58,470 --> 00:04:59,860
+so, these two numbers should be able to change.
+
+103
+00:04:59,860 --> 00:05:02,060
+We'll calculate this, and we get
+
+104
+00:05:02,060 --> 00:05:04,010
+the subnet mask, which is right here.
+
+105
+00:05:04,010 --> 00:05:07,680
+The first IP and the last IP and the total numbers of hosts.
+
+106
+00:05:07,680 --> 00:05:09,530
+So, perfect, that's what we expected.
+
+107
+00:05:09,530 --> 00:05:11,120
+The last two numbers can change,
+
+108
+00:05:11,120 --> 00:05:13,263
+and we get 65 thousand and so IP,
+
+109
+00:05:13,263 --> 00:05:16,880
+and if we do /17, for something a little bit less obvious,
+
+110
+00:05:16,880 --> 00:05:19,764
+and we'll calculate it, we'll get the first IP,
+
+111
+00:05:19,764 --> 00:05:23,340
+and the last IP, as well as the total number of hosts.
+
+112
+00:05:23,340 --> 00:05:26,690
+So, this is really, really handy, but you know, you can do,
+
+113
+00:05:26,690 --> 00:05:28,561
+alternatively, you can refresh this page,
+
+114
+00:05:28,561 --> 00:05:30,173
+so, I'll go back to this page,
+
+115
+00:05:31,060 --> 00:05:32,878
+and what I can do, is just enter an IP range,
+
+116
+00:05:32,878 --> 00:05:36,540
+so, 10.0.0/0, and then, maybe this one,
+
+117
+00:05:36,540 --> 00:05:38,620
+last IP, 'cause that's the range I want,
+
+118
+00:05:38,620 --> 00:05:40,260
+and calculate my CIDR,
+
+119
+00:05:40,260 --> 00:05:43,760
+and it automatically says the result is 10.0.0/17,
+
+120
+00:05:43,760 --> 00:05:46,000
+and this is what you use in AWS,
+
+121
+00:05:46,000 --> 00:05:48,190
+so, really, really handy to be honest.
+
+122
+00:05:48,190 --> 00:05:50,100
+So, finally, we need to define what the difference
+
+123
+00:05:50,100 --> 00:05:53,120
+between a private and a public IP, for IPv4.
+
+124
+00:05:53,120 --> 00:05:55,430
+So, there is this internet authority, called the IANA,
+
+125
+00:05:55,430 --> 00:05:58,220
+it's for Internet Assigned Numbers Authority,
+
+126
+00:05:58,220 --> 00:06:00,286
+and they basically define that certain blocks
+
+127
+00:06:00,286 --> 00:06:02,860
+of IPv4 addresses, are going to be used
+
+128
+00:06:02,860 --> 00:06:05,771
+for private purposes, and the rest is going to be public.
+
+129
+00:06:05,771 --> 00:06:08,470
+So, private IP's only allow certain values,
+
+130
+00:06:08,470 --> 00:06:09,776
+and it's quite easy to remember.
+
+131
+00:06:09,776 --> 00:06:14,776
+The first one is 10.0.0.0, all the way to 10.255.255.255,
+
+132
+00:06:15,262 --> 00:06:18,751
+so, that's basically the CIDR 10.0.0.0/8,
+
+133
+00:06:18,751 --> 00:06:19,584
+and that's for big networks, so, that allows for
+
+134
+00:06:20,830 --> 00:06:23,570
+a lot of machines to be in that private network.
+
+135
+00:06:23,570 --> 00:06:27,310
+Then we have 172.16.0.0/12,
+
+136
+00:06:27,310 --> 00:06:28,830
+and that's the default one we get,
+
+137
+00:06:28,830 --> 00:06:30,560
+when we have a default VPC created,
+
+138
+00:06:30,560 --> 00:06:31,920
+when we create a new account,
+
+139
+00:06:31,920 --> 00:06:35,270
+and then we'll get the 192.168.0.0/16,
+
+140
+00:06:35,270 --> 00:06:36,750
+and you've seen this, I guess, before,
+
+141
+00:06:36,750 --> 00:06:37,801
+because this is what's usually used,
+
+142
+00:06:37,801 --> 00:06:41,070
+when you have a home network, with the WiFi and the router.
+
+143
+00:06:41,070 --> 00:06:44,082
+That's the kind of IPs we get on your internal home network.
+
+144
+00:06:44,082 --> 00:06:46,420
+So, all the rest of the IPs are not
+
+145
+00:06:46,420 --> 00:06:48,740
+in this ranges, are public IP.
+
+146
+00:06:48,740 --> 00:06:49,573
+So, that's it.
+
+147
+00:06:49,573 --> 00:06:51,231
+We're ready to go on with the section on VPC,
+
+148
+00:06:51,231 --> 00:06:53,047
+now that we understand CIDR and private IP,
+
+149
+00:06:53,047 --> 00:06:55,083
+and we'll see you in the next lecture.
+
